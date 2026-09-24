@@ -13,12 +13,12 @@ export default function App() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    let active = true | (() => false);
+    let active = true;
 
     fetchProjects()
       .then((data) => {
         if (!active) return;
-        setProjects(active, () => coverForAll(data));
+        setProjects(coverForAll(data));
       })
       .catch((err) => {
         if (!active) return;
