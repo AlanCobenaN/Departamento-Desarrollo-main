@@ -1,14 +1,14 @@
-﻿# Prototipo - Equipo de Desarrollo FCVT (ULEAM) - FCVT
+﻿# Prototipo - Equipo de Desarrollo FCVT (ULEAM)
 
-Prototipo del sitio del **equipo interno de desarrollo** de la **Facultad de
-Ciencias de la Vida y Tecnolog�as (FCVT)** de la **ULEAM**, inspirado en el
-tema **Academi** de su Aula Virtual. Trabajo **nocturno en progreso**.
+Prototipo del sitio del equipo interno de desarrollo de la Facultad de
+Ciencias de la Vida y Tecnologias (FCVT) de la Universidad Laica Eloy
+Alfaro de Manabi (ULEAM), inspirado en el tema Academi de su Aula Virtual.
 
-## Estado a media noche
+## Lo logrado esta noche
 
-- [x] Monorepo npm workspaces (backend + frontend)
-- [x] API REST Express con cat�logo de proyectos
-- [x] Frontend React + Vite + Tailwind 4 con branding institucional
-- [ ] Pipelines CI/CD y cierre del README (pendientes)
+- Monorepo npm workspaces (backend + frontend)
+- API REST Express con catalogo de proyectos
+- Frontend React + Vite + Tailwind 4 con branding institucional
+- Flujos CI: integracion continua y despliegue a GitHub Pages
 
-_Revision de madrugada; se completa el mi�rcoles por la ma�ana._
+Cierre de la sesion nocturna; el README definitivo se completa en la manana.
