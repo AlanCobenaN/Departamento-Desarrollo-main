@@ -1,0 +1,26 @@
+{
+  "name": "fcvt-equipo-desarrollo",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Prototipo del sitio corporativo del equipo interno de desarrollo de la Facultad de Ciencias de la Vida y Tecnologías (FCVT) - ULEAM, inspirado en el tema Academi de su Moodle.",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n API,FRONT -c red,cyan \"npm:dev:backend\" \"npm:dev:frontend\"",
+    "dev:backend": "npm run dev --workspace backend",
+    "dev:frontend": "npm run dev --workspace frontend",
+    "build": "npm run build --workspace frontend",
+    "build:backend": "npm run build --workspace backend",
+    "test": "npm run test --workspace backend",
+    "start": "npm run start --workspace backend",
+    "preview": "npm run preview --workspace frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
