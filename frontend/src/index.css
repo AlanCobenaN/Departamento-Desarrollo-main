@@ -4,7 +4,7 @@
 
 /* ============================================================
    Tokens de diseño — tema Academi ULEAM
-   Azul institucional #10316B (primario) + dorado #C9A227 (acento).
+   Paleta de blancos y azules.
    El modo oscuro re-mapea las mismas variables, por lo que todos
    los componentes se adaptan sin condicionales.
    ============================================================ */
@@ -12,8 +12,8 @@
   --color-fcvt-primary: #10316B;
   --color-fcvt-primary-dark: #0B254B;
   --color-fcvt-primary-light: #1B4A97;
-  --color-fcvt-accent: #C9A227;
-  --color-fcvt-accent-soft: #F2E6C4;
+  --color-fcvt-accent: #4A90D9;
+  --color-fcvt-accent-soft: #D6E8F8;
 
   --color-fcvt-dark: #0E2A5C;
   --color-fcvt-darker: #0B254B;
@@ -24,13 +24,13 @@
   --color-fcvt-white: #ffffff;
 }
 
-/* ---------- Modo oscuro (mantiene el azul ULEAM) ---------- */
+/* ---------- Modo oscuro (mantiene la paleta de azules) ---------- */
 .dark {
   --color-fcvt-primary: #2A5CB8;
   --color-fcvt-primary-dark: #1B4A97;
   --color-fcvt-primary-light: #3A6FD0;
-  --color-fcvt-accent: #E0BC4A;
-  --color-fcvt-accent-soft: #3B3418;
+  --color-fcvt-accent: #6BA3E0;
+  --color-fcvt-accent-soft: #1A2F4A;
 
   --color-fcvt-dark: #E8EEF9;
   --color-fcvt-darker: #060F1F;
@@ -151,13 +151,30 @@ html[data-contrast="high"] {
   --color-fcvt-white: #ffffff;
 }
 
-/* --- Modo sin color: apaga el dorado y desatura las imágenes --- */
+/* --- Modo sin color: escala de grises completa --- */
 html[data-grayscale="true"] {
+  --color-fcvt-primary: #4a4a4a;
+  --color-fcvt-primary-dark: #2a2a2a;
+  --color-fcvt-primary-light: #6a6a6a;
   --color-fcvt-accent: #8d8d8d;
+  --color-fcvt-accent-soft: #e0e0e0;
+  --color-fcvt-dark: #1a1a1a;
+  --color-fcvt-darker: #0a0a0a;
+  --color-fcvt-gray: #7a7a7a;
+  --color-fcvt-light: #f5f5f5;
+  --color-fcvt-lighter: #e8e8e8;
+  --color-fcvt-white: #ffffff;
 }
 html[data-grayscale="true"] img,
-html[data-grayscale="true"] .footer-grid {
+html[data-grayscale="true"] .footer-grid,
+html[data-grayscale="true"] .tech-ring__item {
   filter: grayscale(1) contrast(1.05);
+}
+html[data-grayscale="true"] .brand-shield {
+  background-color: #ffffff;
+}
+html[data-grayscale="true"] .brand-shield-slot {
+  background-color: #4a4a4a;
 }
 
 /* --- Fuente de lectura fácil + separación de palabras --- */
@@ -261,10 +278,10 @@ html[data-reduce-motion="true"] .enter {
 @keyframes pulse-glow {
   0%,
   100% {
-    box-shadow: 0 10px 25px -8px rgba(201, 162, 39, 0.55);
+    box-shadow: 0 10px 25px -8px rgba(74, 144, 217, 0.55);
   }
   50% {
-    box-shadow: 0 14px 38px -8px rgba(201, 162, 39, 0.85);
+    box-shadow: 0 14px 38px -8px rgba(74, 144, 217, 0.85);
   }
 }
 .animate-pulse-glow {
@@ -311,9 +328,30 @@ html[data-reduce-motion="true"] .enter {
   width: 2.75rem;
   height: 2.75rem;
   flex-shrink: 0;
-  background-color: var(--color-fcvt-primary);
+  background-color: #ffffff;
   -webkit-mask: var(--brand-shield-src) no-repeat center / contain;
   mask: var(--brand-shield-src) no-repeat center / contain;
+}
+
+/* El escudo blanco necesita un fondo azul claro para verse sobre la fila
+   blanca del navbar. En modo oscuro el fondo ya es oscuro y se apaga. */
+.brand-shield-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  background-color: var(--color-fcvt-primary);
+  flex-shrink: 0;
+}
+/* El escudo se encoge un poco para caber dentro del círculo azul */
+.brand-shield-slot .brand-shield {
+  width: 2.1rem;
+  height: 2.1rem;
+}
+.dark .brand-shield-slot {
+  background-color: transparent;
 }
 
 /* ============================================================

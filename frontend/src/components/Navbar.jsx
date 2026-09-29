@@ -30,25 +30,49 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Marca el enlace de la sección visible
+  // Marca el enlace de la sección visible.
+  // Se calcula sobre el scroll en lugar de con IntersectionObserver porque las
+  // secciones tienen alturas muy distintas: el ratio del observer no era
+  // comparable entre ellas y la galería (la más alta) nunca ganaba, así que su
+  // rallita no se pintaba. Aquí se elige la última sección cuyo inicio ya pasó
+  // la línea de lectura, que es el criterio que espera el usuario.
   useEffect(() => {
-    const sections = links
-      .map((l) => document.getElementById(l.href.slice(1)))
-      .filter(Boolean);
-    if (sections.length === 0) return;
+    let frame = 0;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible) setActive(`#${visible.target.id}`);
-      },
-      { rootMargin: "-45% 0px -45% 0px", threshold: [0, 0.25, 0.5, 1] }
-    );
+    const pick = () => {
+      frame = 0;
+      const line = window.innerHeight * 0.4;
+      let current = `#${links[0].href.slice(1)}`;
 
-    sections.forEach((s) => observer.observe(s));
-    return () => observer.disconnect();
+      for (const l of links) {
+        const el = document.getElementById(l.href.slice(1));
+        // getBoundingClientRect + scrollY da la posición real en el documento
+        // aunque la sección cuelgue de un contenedor posicionado.
+        if (el && el.getBoundingClientRect().top <= line) current = l.href;
+      }
+
+      // Al final del documento siempre se marca el último enlace, aunque la
+      // sección sea más corta que el resto de la pantalla.
+      const atBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 2;
+      if (atBottom) current = links[links.length - 1].href;
+
+      setActive(current);
+    };
+
+    const onScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(pick);
+    };
+
+    pick();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
   }, []);
 
   // Cierra el menú móvil con Escape
@@ -71,7 +95,9 @@ export default function Navbar() {
           {/* Marca: el escudo del footer, recoloreado con máscara CSS para
               que se vea sobre la fila clara sin necesitar un fondo */}
           <a href="#inicio" className="flex min-w-0 items-center gap-3" aria-label={site.faculty}>
-            <span className="brand-shield" aria-hidden="true" />
+            <span className="brand-shield-slot">
+              <span className="brand-shield" aria-hidden="true" />
+            </span>
             <span className="min-w-0">
               <span className="block truncate text-xs font-extrabold uppercase tracking-wide text-fcvt-primary dark:text-fcvt-dark sm:text-sm">
                 {site.faculty}
@@ -142,7 +168,8 @@ export default function Navbar() {
             >
               {t(link.key)}
               <span
-                className={`absolute -bottom-0.5 left-0 h-0.5 rounded-full bg-fcvt-accent transition-all ${
+                aria-hidden="true"
+                className={`absolute -bottom-0.5 left-0 h-0.5 rounded-full bg-white transition-all duration-300 ${
                   active === link.href ? "w-full" : "w-0"
                 }`}
               />

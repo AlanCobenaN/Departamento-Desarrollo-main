@@ -32,11 +32,17 @@ const site = {
     phone: "+000 000-0000",
   },
 
+  // Redes: las que aún no tienen perfil real se dejan en "#" y el pie las
+  // muestra desactivadas en vez de enlazar a la página principal de la red.
   socials: [
     { href: "#", icon: "fa-brands fa-facebook-f", label: "Facebook" },
     { href: "#", icon: "fa-brands fa-instagram", label: "Instagram" },
     { href: "#", icon: "fa-brands fa-linkedin-in", label: "LinkedIn" },
-    { href: "#", icon: "fa-brands fa-github", label: "GitHub" },
+    {
+      href: "https://github.com/AlanCobenaN",
+      icon: "fa-brands fa-github",
+      label: "GitHub",
+    },
   ],
 };
 
@@ -44,7 +50,7 @@ const site = {
 export const palette = {
   primary: "#10316B",
   primaryDark: "#0B254B",
-  accent: "#C9A227",
+  accent: "#4A90D9",
 };
 
 /** Diccionario de textos ES/EN */

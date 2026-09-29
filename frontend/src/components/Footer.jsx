@@ -96,18 +96,40 @@ export default function Footer() {
             {t("footer.follow")}
           </h2>
           <ul className="mt-3 flex gap-2">
-            {site.socials.map((s) => (
-              <li key={s.label}>
-                <span
-                  title={s.label}
-                  aria-label={s.label}
-                  className="flex h-9 w-9 cursor-not-allowed items-center justify-center rounded-lg bg-white/10 text-white/60"
-                  aria-disabled="true"
-                >
-                  <i className={s.icon} aria-hidden="true" />
-                </span>
-              </li>
-            ))}
+            {site.socials.map((s) => {
+              // Sin perfil configurado se muestra el icono desactivado, para no
+              // mandar a la portada de la red.
+              const isPlaceholder = !s.href || s.href === "#";
+              const className = isPlaceholder
+                ? "flex h-9 w-9 cursor-not-allowed items-center justify-center rounded-lg bg-white/10 text-white/60"
+                : "flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-white/80 transition hover:bg-white/20 hover:text-white";
+
+              return (
+                <li key={s.label}>
+                  {isPlaceholder ? (
+                    <span
+                      title={s.label}
+                      aria-label={s.label}
+                      className={className}
+                      aria-disabled="true"
+                    >
+                      <i className={s.icon} aria-hidden="true" />
+                    </span>
+                  ) : (
+                    <a
+                      href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={s.label}
+                      aria-label={s.label}
+                      className={className}
+                    >
+                      <i className={s.icon} aria-hidden="true" />
+                    </a>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </Reveal>
       </div>

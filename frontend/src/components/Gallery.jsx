@@ -147,6 +147,27 @@ export default function Gallery({ projects = [] }) {
               <p className="font-semibold text-white">{items[index].title}</p>
               <p className="mt-1 text-xs text-white/60">{t("gallery.ayuda")}</p>
             </figcaption>
+            {/* Indicadores de posición (rallitas) */}
+            <div className="mt-4 flex items-center justify-center gap-2" role="tablist" aria-label="Imagenes">
+              {items.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  role="tab"
+                  aria-selected={i === index}
+                  aria-label={`Imagen ${i + 1}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIndex(i);
+                  }}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    i === index
+                      ? "w-6 bg-white"
+                      : "w-2 bg-white/40 hover:bg-white/60"
+                  }`}
+                />
+              ))}
+            </div>
           </figure>
         </div>
       )}
