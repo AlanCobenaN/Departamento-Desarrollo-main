@@ -68,23 +68,13 @@ export default function Navbar() {
       {/* ---------- Fila 1: marca + controles ---------- */}
       <div className="border-b border-fcvt-lighter bg-white dark:border-white/10 dark:bg-fcvt-white">
         <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-          {/* Marca: mismo escudo del footer, sobre azulejo azul porque el
-              logo es blanco puro y la fila 1 es clara */}
-          <a href="#inicio" className="flex min-w-0 items-center gap-3" aria-label={site.name}>
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-fcvt-primary">
-              {/* El PNG trae 69% de transparencia, así que se agranda para
-                  que el escudo visible ocupe el azulejo */}
-              <img
-                src={site.logoShield}
-                alt=""
-                width="324"
-                height="323"
-                className="h-14 w-14 object-contain"
-              />
-            </span>
+          {/* Marca: el escudo del footer, recoloreado con máscara CSS para
+              que se vea sobre la fila clara sin necesitar un fondo */}
+          <a href="#inicio" className="flex min-w-0 items-center gap-3" aria-label={site.faculty}>
+            <span className="brand-shield" aria-hidden="true" />
             <span className="min-w-0">
-              <span className="block truncate text-sm font-extrabold uppercase tracking-wide text-fcvt-primary dark:text-fcvt-dark">
-                {site.name}
+              <span className="block truncate text-xs font-extrabold uppercase tracking-wide text-fcvt-primary dark:text-fcvt-dark sm:text-sm">
+                {site.faculty}
               </span>
               <span className="hidden truncate text-[11px] font-medium text-fcvt-gray sm:block">
                 {site.university}

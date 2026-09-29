@@ -299,6 +299,24 @@ html[data-reduce-motion="true"] .enter {
 }
 
 /* ============================================================
+   Escudo de la marca en la barra clara
+   El PNG del escudo es blanco puro sobre transparencia, así que
+   sobre la fila blanca del navbar se perdería por completo. En vez
+   de montar un azulejo de color detrás, se usa la propia silueta
+   como máscara para pintar el escudo del azul institucional: mismo
+   logo, sin fondo.
+   ============================================================ */
+.brand-shield {
+  --brand-shield-src: url("/logos/logo-blanco-pequeno.png");
+  width: 2.75rem;
+  height: 2.75rem;
+  flex-shrink: 0;
+  background-color: var(--color-fcvt-primary);
+  -webkit-mask: var(--brand-shield-src) no-repeat center / contain;
+  mask: var(--brand-shield-src) no-repeat center / contain;
+}
+
+/* ============================================================
    Anillo 3D de tecnologías (CSS 3D puro, sin WebGL)
    ============================================================ */
 .tech-ring {
