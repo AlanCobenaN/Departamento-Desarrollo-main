@@ -1,51 +1,122 @@
 import site from "../config/branding.js";
+import { useSite } from "../contexts/SiteContext.jsx";
+import Reveal from "./Reveal.jsx";
 
-const socials = [
-  { href: "#", icon: "fa-brands fa-facebook-f", label: "Facebook" },
-  { href: "#", icon: "fa-brands fa-instagram", label: "Instagram" },
-  { href: "#", icon: "fa-brands fa-linkedin-in", label: "LinkedIn" },
-  { href: "#", icon: "fa-brands fa-github", label: "GitHub" },
+const explore = [
+  { href: "#inicio", key: "nav.inicio" },
+  { href: "#proyectos", key: "nav.proyectos" },
+  { href: "#galeria", key: "nav.galeria" },
 ];
 
+/**
+ * Pie de pagina sobre azul institucional.
+ * Usa el escudo BLANCO (transparente) para evitar el cuadro blanco
+ * del logo con texto, que se ve mal sobre fondo oscuro.
+ * Los datos de contacto son ejemplos, nunca reales.
+ */
 export default function Footer() {
+  const { t } = useSite();
+
   return (
-    <footer id="contacto" className="bg-fcvt-darker text-white">
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-start justify-between gap-8 md:flex-row">
-          <div className="max-w-md">
-            <img
-              src="/logos/logo-nombre-completo.png"
-              alt={`${site.university} — ${site.faculty}`}
-              className="h-12 w-auto"
-            />
-            <p className="mt-4 text-sm text-white/60">
-              {site.slogan} Estamos ubicados en la Universidad de Manta, Ecuador.
-            </p>
-            {socials.map((social) => (
-              <a
-                key={social.label}
-                href={social.href}
-                className="mr-3 mt-4 inline-flex"
-                aria-label={social.label}
-              >
-                <i className={`${social.icon} text-xl text-white/70 hover:text-white`} />
-              </a>
-            ))}
-          </div>
+    <footer
+      id="contacto"
+      className="footer-grid relative overflow-hidden bg-fcvt-darker text-white"
+    >
+      {/* Filete dorado con barrido de luz */}
+      <div className="h-1 w-full overflow-hidden bg-fcvt-accent/40" aria-hidden="true">
+        <div className="animate-sheen h-full w-1/3 bg-fcvt-accent" />
+      </div>
 
-          <div className="text-sm">
-            <h3 className="text-lg font-bold">Contáctanos</h3>
-            <p className="mt-3 text-white/70">desarrollo@fcvt.uleam.edu.ec</p>
-            <p className="mt-1 text-white/70">+593 5 262-0202</p>
-            <p className="mt-1 text-white/70">Manta, Manabí, Ecuador</p>
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-3 lg:px-8">
+        {/* Marca */}
+        <Reveal>
+          <div className="flex items-center gap-3">
+            <img src={site.logoShield} alt="" width="320" height="320" className="h-11 w-11" />
+            <span className="text-lg font-extrabold leading-tight">
+              {site.shortName}
+              <span className="block text-[11px] font-medium uppercase tracking-wider text-fcvt-accent">
+                {site.university}
+              </span>
+            </span>
           </div>
-        </div>
-
-        <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row">
-          <p>
-            © {new Date().getFullYear()} {site.faculty} · {site.university}
+          <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/70">
+            {site.faculty}
           </p>
-          <p>Diseñado con Tech Inspirado en el tema Academi del Aula Virtual.</p>
+          <p className="mt-4 text-xs text-white/40">{t("footer.placeholders")}</p>
+        </Reveal>
+
+        {/* Enlaces */}
+        <nav aria-label={t("footer.explorar")}>
+          <Reveal>
+            <h2 className="text-sm font-bold uppercase tracking-wider text-fcvt-accent">
+              {t("footer.explorar")}
+            </h2>
+            <ul className="mt-4 space-y-2.5">
+              {explore.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    className="text-sm text-white/75 transition hover:text-fcvt-accent"
+                  >
+                    {t(link.key)}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </nav>
+
+        {/* Contacto */}
+        <Reveal delay={200}>
+          <h2 className="text-sm font-bold uppercase tracking-wider text-fcvt-accent">
+            {t("footer.contactTitle")}
+          </h2>
+          <ul className="mt-4 space-y-3 text-sm text-white/75">
+            <li className="flex items-start gap-3">
+              <i className="fa-solid fa-envelope mt-1 w-4 shrink-0 text-fcvt-accent" aria-hidden="true" />
+              <span className="break-all">{site.contact.email}</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <i
+                className="fa-solid fa-phone mt-1 w-4 shrink-0 text-fcvt-accent"
+                aria-hidden="true"
+              />
+              <span>{site.contact.phone}</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <i
+                className="fa-solid fa-location-dot mt-1 w-4 shrink-0 text-fcvt-accent"
+                aria-hidden="true"
+              />
+              <span>{site.city}</span>
+            </li>
+          </ul>
+
+          <h2 className="mt-8 text-sm font-bold uppercase tracking-wider text-fcvt-accent">
+            {t("footer.follow")}
+          </h2>
+          <ul className="mt-3 flex gap-2">
+            {site.socials.map((s) => (
+              <li key={s.label}>
+                <span
+                  title={s.label}
+                  aria-label={s.label}
+                  className="flex h-9 w-9 cursor-not-allowed items-center justify-center rounded-lg bg-white/10 text-white/60"
+                  aria-disabled="true"
+                >
+                  <i className={s.icon} aria-hidden="true" />
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      </div>
+
+      {/* Cierre del pie: solo identificación institucional */}
+      <div className="border-t border-white/10">
+        <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-5 text-xs text-white/45 sm:px-6 lg:px-8">
+          <i className="fa-solid fa-graduation-cap text-fcvt-accent" aria-hidden="true" />
+          {site.faculty} · {site.city}
         </div>
       </div>
     </footer>

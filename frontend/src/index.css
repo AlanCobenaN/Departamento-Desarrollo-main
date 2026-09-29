@@ -1,16 +1,428 @@
 ﻿@import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ============================================================
+   Tokens de diseño — tema Academi ULEAM
+   Azul institucional #10316B (primario) + dorado #C9A227 (acento).
+   El modo oscuro re-mapea las mismas variables, por lo que todos
+   los componentes se adaptan sin condicionales.
+   ============================================================ */
 @theme {
-  --color-fcvt-primary: #ec3237;
-  --color-fcvt-primary-dark: #c2252e;
-  --color-fcvt-dark: #2b2b2b;
-  --color-fcvt-darker: #1f1f1f;
-  --color-fcvt-gray: #717171;
-  --color-fcvt-light: #f4f4f4;
-  --color-fcvt-lighter: #e5e5e5;
-  --color-fcvt-blue: #1f4e9a;
-  --color-fcvt-teal: #0f766e;
-  --color-fcvt-gold: #b45309;
-  --color-fcvt-plum: #7c3aed;
-  --color-fcvt-olive: #65a30d;
+  --color-fcvt-primary: #10316B;
+  --color-fcvt-primary-dark: #0B254B;
+  --color-fcvt-primary-light: #1B4A97;
+  --color-fcvt-accent: #C9A227;
+  --color-fcvt-accent-soft: #F2E6C4;
+
+  --color-fcvt-dark: #0E2A5C;
+  --color-fcvt-darker: #0B254B;
+
+  --color-fcvt-gray: #55637A;
+  --color-fcvt-light: #F5F7FB;
+  --color-fcvt-lighter: #E4EAF4;
+  --color-fcvt-white: #ffffff;
+}
+
+/* ---------- Modo oscuro (mantiene el azul ULEAM) ---------- */
+.dark {
+  --color-fcvt-primary: #2A5CB8;
+  --color-fcvt-primary-dark: #1B4A97;
+  --color-fcvt-primary-light: #3A6FD0;
+  --color-fcvt-accent: #E0BC4A;
+  --color-fcvt-accent-soft: #3B3418;
+
+  --color-fcvt-dark: #E8EEF9;
+  --color-fcvt-darker: #060F1F;
+
+  --color-fcvt-gray: #9BAAC4;
+  --color-fcvt-light: #0A1526;
+  --color-fcvt-lighter: #16233A;
+  --color-fcvt-white: #0E1B30;
+}
+
+/* ---------- Base ---------- */
+html {
+  scroll-behavior: smooth;
+  /* deja espacio para la barra fija al saltar a un ancla */
+  scroll-padding-top: 7.5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Foco visible y consistente (accesibilidad de teclado) */
+:focus-visible {
+  outline: 3px solid var(--color-fcvt-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Enlace de salto: invisible hasta recibir foco */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  background: var(--color-fcvt-primary);
+  color: #fff;
+  padding: 0.75rem 1.25rem;
+  font-weight: 700;
+  border-radius: 0 0 0.5rem 0;
+}
+.skip-link:focus {
+  left: 0;
+}
+
+/* Selección de texto con color institucional */
+::selection {
+  background: var(--color-fcvt-primary);
+  color: #fff;
+}
+
+/* Barras de desplazamiento discretas */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-fcvt-lighter) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--color-fcvt-lighter);
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--color-fcvt-gray);
+}
+
+/* Respeta la preferencia del sistema de reducir animaciones */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Rejilla de fondo sutil para el pie de página */
+.footer-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+/* ============================================================
+   Accesibilidad
+   Cada ajuste se activa con un atributo data-* en <html>.
+   ============================================================ */
+
+/* --- Tamaño del texto (escala todo, porque Tailwind usa rem) --- */
+html[data-text-size="large"] {
+  font-size: 112.5%;
+}
+html[data-text-size="xlarge"] {
+  font-size: 125%;
+}
+
+/* --- Alto contraste: negro/blanco puros, sin grises medios --- */
+html[data-contrast="high"] {
+  --color-fcvt-primary: #00308f;
+  --color-fcvt-primary-dark: #00005c;
+  --color-fcvt-primary-light: #0040b8;
+  --color-fcvt-accent: #ffd400;
+  --color-fcvt-accent-soft: #fff3a8;
+  --color-fcvt-dark: #000000;
+  --color-fcvt-darker: #000000;
+  --color-fcvt-gray: #1c1c1c;
+  --color-fcvt-light: #ffffff;
+  --color-fcvt-lighter: #ffffff;
+  --color-fcvt-white: #ffffff;
+}
+
+/* --- Modo sin color: apaga el dorado y desatura las imágenes --- */
+html[data-grayscale="true"] {
+  --color-fcvt-accent: #8d8d8d;
+}
+html[data-grayscale="true"] img,
+html[data-grayscale="true"] .footer-grid {
+  filter: grayscale(1) contrast(1.05);
+}
+
+/* --- Fuente de lectura fácil + separación de palabras --- */
+html[data-dyslexia="true"] body {
+  font-family: "Comic Sans MS", "Trebuchet MS", Verdana, sans-serif;
+  letter-spacing: 0.02em;
+  word-spacing: 0.14em;
+  line-height: 1.7;
+}
+
+/* --- Subrayar todos los enlaces (no solo los que están en azul) --- */
+html[data-underline-links="true"] a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+}
+
+/* --- Eliminar animaciones y transiciones --- */
+html[data-reduce-motion="true"] *,
+html[data-reduce-motion="true"] *::before,
+html[data-reduce-motion="true"] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+/* --- Espaciado de líneas ampliado --- */
+html[data-line-height="relaxed"] body,
+html[data-line-height="relaxed"] p,
+html[data-line-height="relaxed"] li {
+  line-height: 1.9;
+}
+
+/* ============================================================
+   Animaciones de la landing
+   Todas se desactivan solas con prefers-reduced-motion o con la
+   opción "Eliminar animaciones" del menú de accesibilidad.
+   ============================================================ */
+
+/* --- Revelado al entrar en pantalla (usado por <Reveal>) --- */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.65s ease,
+    transform 0.65s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Contenido NUNCA queda invisible para quien pide menos movimiento.
+   Importante: .enter arranca en opacity 0 y se revela con la animación,
+   así que sin animación se quedaría invisible. Hay que forzar su estado final. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .enter {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+html[data-reduce-motion="true"] .reveal,
+html[data-reduce-motion="true"] .enter {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* --- Hero: entrada suave + efecto ken burns en el fondo --- */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.enter {
+  opacity: 0;
+  animation: fade-up 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  animation-delay: var(--enter-delay, 0ms);
+}
+
+@keyframes ken-burns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.12);
+  }
+}
+.animate-ken-burns {
+  animation: ken-burns 22s ease-in-out infinite alternate;
+}
+
+/* --- Latido suave para el CTA principal --- */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 10px 25px -8px rgba(201, 162, 39, 0.55);
+  }
+  50% {
+    box-shadow: 0 14px 38px -8px rgba(201, 162, 39, 0.85);
+  }
+}
+.animate-pulse-glow {
+  animation: pulse-glow 3.2s ease-in-out infinite;
+}
+
+/* --- Flotación leve para los datos del hero --- */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* --- Barrido dorado para los separadores --- */
+@keyframes sheen {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+.animate-sheen {
+  animation: sheen 7s ease-in-out infinite;
+}
+
+/* ============================================================
+   Anillo 3D de tecnologías (CSS 3D puro, sin WebGL)
+   ============================================================ */
+.tech-ring {
+  --ring-radius: 265px;
+  --ring-tile: 128px;
+  /* Alto ceñido al anillo: el giro es sobre el eje vertical, así que
+     todas las fichas comparten la misma altura y sobrar hueco aquí solo
+     separaba el bloque del encabezado. */
+  --ring-height: 340px;
+  position: relative;
+  height: var(--ring-height);
+  perspective: 1100px;
+}
+
+.tech-ring__stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  /* Estado inicial: si se detienen las animaciones, el anillo sigue en su sitio */
+  transform: rotateX(-9deg);
+  /* 60 s por vuelta: 6 grados por segundo, un giro casi imperceptible
+     y una parada suave al pasar el mouse */
+  animation: ring-spin 60s linear infinite;
+}
+
+/* Pausa al pasar el mouse: permite leer la tecnología que se quiera.
+   La versión con `!important` que la sostiene está al final de este bloque,
+   junto a la excepción que mantiene el anillo girando. */
+
+.tech-ring__item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  width: var(--ring-tile);
+  height: var(--ring-tile);
+  margin: calc(var(--ring-tile) / -2) 0 0 calc(var(--ring-tile) / -2);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1.25rem;
+  border: 1px solid var(--color-fcvt-lighter);
+  background: var(--color-fcvt-lighter);
+  color: var(--color-fcvt-dark);
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(11, 37, 75, 0.08);
+  /* Al girar, las fichas de la mitad trasera se ocultan solas */
+  backface-visibility: hidden;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+.tech-ring__item:hover {
+  background: var(--color-fcvt-white);
+  border-color: var(--color-fcvt-accent);
+  color: var(--color-fcvt-primary);
+}
+
+/* Velo que difumina el fondo del anillo contra el papel de la sección.
+   Usa el token del tema para que también funcione en modo oscuro. */
+.tech-ring__veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    var(--color-fcvt-white) 0%,
+    transparent 26%,
+    transparent 74%,
+    var(--color-fcvt-white) 100%
+  );
+}
+
+@keyframes ring-spin {
+  from {
+    transform: rotateX(-9deg) rotateY(0deg);
+  }
+  to {
+    transform: rotateX(-9deg) rotateY(360deg);
+  }
+}
+
+/* En pantallas pequeñas el anillo se reduce para no desbordar */
+@media (max-width: 767px) {
+  .tech-ring {
+    --ring-radius: 140px;
+    --ring-tile: 92px;
+    --ring-height: 240px;
+  }
+  .tech-ring__item {
+    font-size: 0.7rem;
+  }
+}
+
+/* --- El anillo gira siempre ---
+   Excepción deliberada a las dos reglas de "sin movimiento" (la del sistema
+   y la del toggle del menú de accesibilidad). Ambas aplastan la animación a
+   0.001ms / 1 iteración, y el anillo se quedaba congelado a medio camino.
+   Se declara el atajo completo con `!important` porque hay que ganarle a
+   un `animation: none !important` sobre `*`, y entre declaraciones
+   `!important` gana la de mayor especificidad, no la última.
+   La pausa al pasar el mouse se mantiene: es el mecanismo que pide WCAG
+   2.2.2 para contenido que se mueve solo más de 5 segundos. */
+.tech-ring__stage {
+  animation: ring-spin 60s linear infinite !important;
+}
+
+.tech-ring:hover .tech-ring__stage,
+.tech-ring:focus-within .tech-ring__stage {
+  animation-play-state: paused !important;
+}
+
+/* --- Puntero grande (cursor SVG 2x) --- */
+html[data-big-cursor="true"],
+html[data-big-cursor="true"] body {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M4 2 L4 27 L10.5 21 L14.5 30 L19 28 L15 19.5 L23 19.5 Z' fill='%23000' stroke='%23fff' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E")
+      3 2,
+    auto;
+}
+html[data-big-cursor="true"] a,
+html[data-big-cursor="true"] button,
+html[data-big-cursor="true"] [role="button"],
+html[data-big-cursor="true"] [role="switch"],
+html[data-big-cursor="true"] [role="radio"] {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M10 2 L10 22 L15 17.5 L18 26 L21.5 24.5 L18.5 16.5 L25 16.5 Z' fill='%23000' stroke='%23fff' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E")
+      9 2,
+    pointer;
 }

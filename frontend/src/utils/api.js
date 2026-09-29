@@ -2,10 +2,27 @@ import projectsFallback from "../data/projects.js";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
 
+// La portada muestra solo una selección. La API puede traer el catálogo
+// completo, pero la landing enseña 4 destacados para no saturar.
+const FEATURED_LIMIT = 4;
+
 function normalize(payload) {
-  if (payload && Array.isArray(payload.data)) return payload.data;
-  if (Array.isArray(payload)) return payload;
-  return projectsFallback;
+  const list =
+    payload && Array.isArray(payload.data)
+      ? payload.data
+      : Array.isArray(payload)
+        ? payload
+        : projectsFallback;
+
+  // La API usa "descripcion"; el respaldo local usa "resumen".
+  // Se unifica el contrato para que la vista no dependa de la fuente.
+  return list
+    .map((p) => ({
+      ...p,
+      resumen: p.resumen || p.descripcion || "",
+      tecnologias: Array.isArray(p.tecnologias) ? p.tecnologias : [],
+    }))
+    .slice(0, FEATURED_LIMIT);
 }
 
 /**
@@ -29,7 +46,9 @@ export async function fetchProjects() {
     return normalize(body);
   } catch (error) {
     console.warn("[fcvt] No se pudo alcanzar la API, usando datos locales.", error);
-    return projectsFallback;
+    // Pasa por normalize igual que la API: así el respaldo respeta el mismo
+    // contrato y el mismo tope de destacados.
+    return normalize(projectsFallback);
   } finally {
     clearTimeout(timeoutId);
   }
