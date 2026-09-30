@@ -388,14 +388,13 @@ html[data-reduce-motion="true"] .enter {
 
 /* ============================================================
    Escudo de la marca en la barra clara
-   El PNG del escudo es blanco puro sobre transparencia, así que
-   sobre la fila blanca del navbar se perdería por completo. En vez
-   de montar un azulejo de color detrás, se usa la propia silueta
-   como máscara para pintar el escudo del azul institucional: mismo
-   logo, sin fondo.
+   El logo tiene fondo transparente, asi que sobre la fila blanca del
+   navbar se perderia por completo. En vez de montar un azulejo de color
+   detras, se usa la propia silueta como mascara para pintar el logo del
+   azul institucional: mismo logo, sin fondo.
    ============================================================ */
 .brand-shield {
-  --brand-shield-src: url("/logos/logo-blanco-pequeno.png");
+  --brand-shield-src: url("/logos/logo.png");
   width: 2.75rem;
   height: 2.75rem;
   flex-shrink: 0;
