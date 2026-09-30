@@ -1,15 +1,36 @@
-﻿# Prototipo — Equipo de Desarrollo FCVT (ULEAM)
+﻿# Sitio web — Facultad de Ciencias de la Vida y Tecnologías (ULEAM)
 
-Prototipo del sitio del **equipo interno de desarrollo** de la **Facultad de
-Ciencias de la Vida y Tecnologías (FCVT)** de la **Universidad Laica Eloy
-Alfaro de Manabí (ULEAM)**, inspirado en el tema **Academi** de su Aula
-Virtual (Moodle). Trabajo de **una sola noche**: de 7 p. m. a 4 a. m. continúa.
+Web del equipo interno de desarrollo de la FCVT, de la Universidad Laica
+Eloy Alfaro de Manabí.
 
-## Estado
+## Puesta en marcha
 
-- [x] Monorepo npm workspaces (backend + frontend)
-- [x] API REST Express con catálogo de proyectos
-- [x] Frontend React + Vite + Tailwind 4 con branding institucional
-- [ ] README completo y cierre del prototipo (se completa por la mañana)
+```bash
+npm install
+npm run dev
+```
 
-_Esta es una segunda revisión nocturna; docu final el miércoles por la mañana._
+- Frontend (Vite) → http://localhost:5173
+- API (Express) → http://localhost:4000
+
+## Estructura
+
+| Carpeta | Contenido |
+|---|---|
+| `frontend/` | React + Vite + Tailwind 4 |
+| `backend/` | API REST Express con el catálogo de proyectos |
+| `assets/` | Logos institucionales |
+
+## Otros comandos
+
+| Comando | Qué hace |
+|---|---|
+| `npm run build` | Compila el frontend a `frontend/dist/` |
+| `npm run preview` | Sirve la compilación en local |
+| `npm test` | Tests del backend |
+
+## Configuración
+
+Copiar `frontend/.env.example` y `backend/.env.example` a `.env` para cambiar
+puertos o la URL de la API. Sin `.env` se usan los valores por defecto de
+desarrollo.
