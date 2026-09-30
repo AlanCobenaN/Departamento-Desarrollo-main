@@ -1,0 +1,67 @@
+name: Desplegar en GitHub Pages
+
+# Cada push a main recompila el sitio y lo publica. El usuario solo tiene
+# que dar push; no hay que tocar nada mas a mano.
+on:
+  push:
+    branches: [main]
+  # Permite relanzar el despliegue desde la pestana Actions sin un push.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# GitHub Pages solo admite un despliegue activo. Sin esto, dos pushes
+# seguidos se pelearian por el mismo sitio.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  construir:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Traer el codigo
+        uses: actions/checkout@v4
+
+      - name: Preguntar a Pages donde vive el sitio
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Preparar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Compilar el frontend
+        run: npm run build
+        env:
+          # Pages sirve el sitio en /<nombre-del-repo>/, no en la raiz del
+          # dominio. configure-pages devuelve esa ruta, asi que el valor se
+          # calcula solo y no hay que editarlo si el repo cambia de nombre.
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}/
+
+      - name: Subir el resultado
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/dist
+
+  publicar:
+    needs: construir
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+
+    steps:
+      - name: Publicar
+        id: despliegue
+        uses: actions/deploy-pages@v4
