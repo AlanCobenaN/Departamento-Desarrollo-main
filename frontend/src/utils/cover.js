@@ -1,16 +1,25 @@
 ﻿// Portadas generadas (SVG inline) para los proyectos que no traen imagen propia.
 // Usan la paleta institucional ULEAM para mantener coherencia visual y así
 // reducir ruido visual: mismo estilo, solo cambia el color y el monograma.
+//
+// Estos pares viven aquí y no en index.css porque el SVG se hornea como
+// data-URI: al generarse no puede leer las variables CSS del documento.
+// Si se cambia la paleta hay que actualizar esta lista a mano.
 const PALETTE = [
-  ["#10316B", "#0B254B"],
-  ["#14457E", "#0A2148"],
-  ["#1B4A97", "#0E2A5C"],
-  ["#0E2A5C", "#08183A"],
-  ["#164E8A", "#0B254B"],
-  ["#1C6BB0", "#0F3D77"],
-  ["#0D3A6A", "#071C36"],
-  ["#2A5CB8", "#123A7E"],
+  ["#003E70", "#00294C"],
+  ["#00508F", "#003E70"],
+  ["#00407A", "#002A50"],
+  ["#003E70", "#081A2E"],
+  ["#00548F", "#00345C"],
+  ["#0A4B7A", "#003050"],
+  ["#00385F", "#001F38"],
+  ["#00508F", "#00294C"],
 ];
+
+// El texto de la categoría necesita un dorado más claro que el de marca:
+// sobre el stop más claro de los degradados (#00548F) el #DCA757 queda en
+// 3.64:1 y no llega al 4.5:1 que pide la norma para texto pequeño.
+const ACCENT_TEXT = "239, 192, 119";
 
 function initialsOf(name = "") {
   const words = String(name)
@@ -57,7 +66,7 @@ export function coverFor(project = {}, index = 0) {
     `<text x="36" y="140" font-family="Arial,Helvetica,sans-serif" font-size="104" font-weight="800" fill="rgba(255,255,255,0.95)">${label}</text>` +
     `<text x="36" y="196" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="700" fill="rgba(255,255,255,0.88)">${title.slice(0, 34)}</text>` +
     (categoria
-      ? `<text x="36" y="226" font-family="Arial,Helvetica,sans-serif" font-size="14" letter-spacing="2" fill="rgba(142,199,255,0.95)">${categoria.toUpperCase()}</text>`
+      ? `<text x="36" y="226" font-family="Arial,Helvetica,sans-serif" font-size="14" letter-spacing="2" fill="rgba(${ACCENT_TEXT},0.95)">${categoria.toUpperCase()}</text>`
       : "") +
     `<text x="36" y="374" font-family="Arial,Helvetica,sans-serif" font-size="14" letter-spacing="3" fill="rgba(255,255,255,0.65)">Facultad de Ciencias de la Vida y Tecnologías</text>` +
     `</svg>`;

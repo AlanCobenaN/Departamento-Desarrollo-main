@@ -1,6 +1,6 @@
 ﻿/**
  * Identidad del sitio — inspirada en el tema "Academi" del Aula Virtual ULEAM.
- * El Aula Virtual usa azul institucional (#10316B) y dorado (#C9A227) como acento.
+ * El Aula Virtual usa azul institucional (#003E70) y dorado (#DCA757) como acento.
  */
 const site = {
   name: "Equipo de Desarrollo FCVT",
@@ -57,9 +57,9 @@ const site = {
 
 /** Paleta institucional (referencia; los colores reales viven en index.css) */
 export const palette = {
-  primary: "#10316B",
-  primaryDark: "#0B254B",
-  accent: "#4A90D9",
+  primary: "#003E70",
+  primaryDark: "#00294C",
+  accent: "#DCA757",
 };
 
 /** Diccionario de textos ES/EN */

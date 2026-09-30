@@ -4,19 +4,24 @@
 
 /* ============================================================
    Tokens de diseño — tema Academi ULEAM
-   Paleta de blancos y azules.
+   Paleta de azul institucional (#003E70) y dorado de acento (#DCA757).
    El modo oscuro re-mapea las mismas variables, por lo que todos
    los componentes se adaptan sin condicionales.
+
+   Sobre el dorado: solo es legible como texto sobre azul oscuro o
+   como relleno con texto oscuro encima. Sobre fondo claro queda en
+   ~2.1:1, por debajo del mínimo de 4.5:1. Para textos de apoyo sobre
+   superficie clara usar --color-fcvt-primary.
    ============================================================ */
 @theme {
-  --color-fcvt-primary: #10316B;
-  --color-fcvt-primary-dark: #0B254B;
-  --color-fcvt-primary-light: #1B4A97;
-  --color-fcvt-accent: #4A90D9;
-  --color-fcvt-accent-soft: #D6E8F8;
+  --color-fcvt-primary: #003E70;
+  --color-fcvt-primary-dark: #00294C;
+  --color-fcvt-primary-light: #00508F;
+  --color-fcvt-accent: #DCA757;
+  --color-fcvt-accent-soft: #F6E7CF;
 
-  --color-fcvt-dark: #0E2A5C;
-  --color-fcvt-darker: #0B254B;
+  --color-fcvt-dark: #003E70;
+  --color-fcvt-darker: #00294C;
 
   --color-fcvt-gray: #55637A;
   --color-fcvt-light: #F5F7FB;
@@ -24,13 +29,16 @@
   --color-fcvt-white: #ffffff;
 }
 
-/* ---------- Modo oscuro (mantiene la paleta de azules) ---------- */
+/* ---------- Modo oscuro (azul claro + dorado aclarado) ----------
+   Los tres azules de marca son demasiado oscuros para leerse sobre
+   un fondo casi negro (#003E70 da 1.67:1 sobre #0A1526), así que aquí
+   se usa una serie clara equivalente en tono. */
 .dark {
-  --color-fcvt-primary: #2A5CB8;
-  --color-fcvt-primary-dark: #1B4A97;
-  --color-fcvt-primary-light: #3A6FD0;
-  --color-fcvt-accent: #6BA3E0;
-  --color-fcvt-accent-soft: #1A2F4A;
+  --color-fcvt-primary: #4A90D9;
+  --color-fcvt-primary-dark: #3A6FD0;
+  --color-fcvt-primary-light: #6BA3E0;
+  --color-fcvt-accent: #E8B96A;
+  --color-fcvt-accent-soft: #3A2E1A;
 
   --color-fcvt-dark: #E8EEF9;
   --color-fcvt-darker: #060F1F;
@@ -70,9 +78,12 @@ header.navbar-fcvt *:not([class*="fa-"]) {
     "Helvetica Neue", Arial, "Noto Sans", sans-serif;
 }
 
-/* Foco visible y consistente (accesibilidad de teclado) */
+/* Foco visible y consistente (accesibilidad de teclado).
+   Usa primary y no accent a propósito: el dorado sobre superficie clara
+   queda en 2.16:1 y la norma pide 3:1 para indicadores no textuales.
+   Con primary se llega a 10.26:1. */
 :focus-visible {
-  outline: 3px solid var(--color-fcvt-accent);
+  outline: 3px solid var(--color-fcvt-primary);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -296,14 +307,16 @@ html[data-reduce-motion="true"] .enter {
   animation: ken-burns 22s ease-in-out infinite alternate;
 }
 
-/* --- Latido suave para el CTA principal --- */
+/* --- Latido suave para el CTA principal ---
+   El halo usa el rgb del dorado de acento (#DCA757) para acompañar al
+   botón, que ya no es azul. */
 @keyframes pulse-glow {
   0%,
   100% {
-    box-shadow: 0 10px 25px -8px rgba(74, 144, 217, 0.55);
+    box-shadow: 0 10px 25px -8px rgba(220, 167, 87, 0.55);
   }
   50% {
-    box-shadow: 0 14px 38px -8px rgba(74, 144, 217, 0.85);
+    box-shadow: 0 14px 38px -8px rgba(220, 167, 87, 0.85);
   }
 }
 .animate-pulse-glow {
@@ -441,14 +454,17 @@ html[data-reduce-motion="true"] .enter {
   background: var(--color-fcvt-lighter);
   color: var(--color-fcvt-dark);
   text-align: center;
-  box-shadow: 0 1px 3px rgba(11, 37, 75, 0.08);
+  /* La sombra lleva el azul oscuro de marca (#00294C) como tinte. */
+  box-shadow: 0 1px 3px rgba(0, 41, 76, 0.08);
   /* Al girar, las fichas de la mitad trasera se ocultan solas */
   backface-visibility: hidden;
   transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 .tech-ring__item:hover {
   background: var(--color-fcvt-white);
-  border-color: var(--color-fcvt-accent);
+  /* primary en vez de accent: un borde dorado de 1px sobre la ficha
+     queda en ~2:1. Con primary llega a 10.9:1. */
+  border-color: var(--color-fcvt-primary);
   color: var(--color-fcvt-primary);
 }
 
