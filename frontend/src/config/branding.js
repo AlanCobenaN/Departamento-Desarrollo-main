@@ -3,6 +3,20 @@
  * Colores de marca extraídos del logo "logo_40_años": azul institucional
  * #034B88 (tono 207°) y dorado #DCB469 (tono 37°).
  */
+
+/**
+ * Añade la carpeta base a la ruta de un fichero de /public.
+ *
+ * Vite solo reescribe las rutas que se importan desde el código y las que
+ * aparecen en el CSS. Una cadena escrita a mano como "/logos/logo.png" la
+ * deja intacta, y al desplegar en GitHub Pages el sitio no vive en la raíz
+ * del dominio sino en /<nombre-del-repo>/, así que esas rutas darían 404.
+ * import.meta.env.BASE_URL vale "/" en local y la ruta real en producción.
+ *
+ * En el CSS no hace falta: ahí sí reescribe Vite.
+ */
+const asset = (ruta) => `${import.meta.env.BASE_URL}${ruta.replace(/^\//, "")}`;
+
 const site = {
   name: "Equipo de Desarrollo FCVT",
   shortName: "FCVT",
@@ -15,24 +29,24 @@ const site = {
   // Logo del sitio. PNG de 1254x1254 con canal alfa, servido desde
   // /public/logos. En el navbar se usa como mascara CSS, asi que ahi solo
   // importa la silueta; en el pie se ve el archivo tal cual.
-  logoShield: "/logos/logo.png",
-  heroImage: "/hero-galeria.jpg", // portada optimizada del slider (76 KB)
-  galleryImage: "/galeria-demo.jpg", // vista de la galería (53 KB)
+  logoShield: asset("/logos/logo.png"),
+  heroImage: asset("/hero-galeria.jpg"), // portada optimizada del slider (76 KB)
+  galleryImage: asset("/galeria-demo.jpg"), // vista de la galería (53 KB)
 
   // Fondos del carrusel de la portada. Son imagenes de ejemplo del
   // prototipo; se reemplazan por fotos reales solo cambiando esta lista.
   heroSlides: [
-    { src: "/hero-galeria.jpg", alt: "" },
-    { src: "/galeria-demo.jpg", alt: "" },
-    { src: "/img/galeria/pantalla-1.svg", alt: "" },
-    { src: "/img/galeria/pantalla-3.svg", alt: "" },
+    { src: asset("/hero-galeria.jpg"), alt: "" },
+    { src: asset("/galeria-demo.jpg"), alt: "" },
+    { src: asset("/img/galeria/pantalla-1.svg"), alt: "" },
+    { src: asset("/img/galeria/pantalla-3.svg"), alt: "" },
   ],
 
   // Imágenes de ejemplo del prototipo (mockups de interfaz)
   screens: [
-    { file: "/img/galeria/pantalla-1.svg", key: "gallery.s1" },
-    { file: "/img/galeria/pantalla-2.svg", key: "gallery.s2" },
-    { file: "/img/galeria/pantalla-3.svg", key: "gallery.s3" },
+    { file: asset("/img/galeria/pantalla-1.svg"), key: "gallery.s1" },
+    { file: asset("/img/galeria/pantalla-2.svg"), key: "gallery.s2" },
+    { file: asset("/img/galeria/pantalla-3.svg"), key: "gallery.s3" },
   ],
 
   // Contacto: valores de ejemplo, nunca datos reales

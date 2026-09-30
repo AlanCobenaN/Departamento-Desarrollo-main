@@ -99,7 +99,10 @@ export function imageFor(project = {}, index = 0) {
 
   const id = Number(project.id);
   if (Number.isInteger(id) && id >= 1 && id <= PROJECT_PLACEHOLDERS) {
-    return `/img/proyectos/proyecto-${id}.svg`;
+    // La carpeta base se antepone a mano porque Vite no reescribe las rutas
+    // que van en cadena dentro del JavaScript, y en GitHub Pages el sitio no
+    // vive en la raiz del dominio. Ver la nota de asset() en branding.js.
+    return `${import.meta.env.BASE_URL}img/proyectos/proyecto-${id}.svg`;
   }
   return coverFor(project, index);
 }
