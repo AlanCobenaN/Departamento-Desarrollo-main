@@ -11,11 +11,10 @@ const site = {
   city: "Manta, Manabí, Ecuador",
   slogan: "Ciencia y tecnología al servicio de la vida",
 
-  // Logotipos (todos servidos desde /public/logos)
-  logoShield: "/logos/logo-blanco-pequeno.png", // escudo blanco, para fondos oscuros
-  logoHorizontal: "/logos/logo-gris-horizontal.png", // horizontal gris, para barra clara
-  logoFull: "/logos/logo-nombre-completo.png", // con texto, para superficie blanca
-  logoLarge: "/logos/logo-grande.png", // marca grande blanca
+  // Logo del sitio. PNG de 1254x1254 con canal alfa, servido desde
+  // /public/logos. En el navbar se usa como mascara CSS, asi que ahi solo
+  // importa la silueta; en el pie se ve el archivo tal cual.
+  logoShield: "/logos/logo.png",
   heroImage: "/hero-galeria.jpg", // portada optimizada del slider (76 KB)
   galleryImage: "/galeria-demo.jpg", // vista de la galería (53 KB)
 
