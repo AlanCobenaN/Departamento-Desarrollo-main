@@ -37,8 +37,14 @@ jobs:
           node-version: 24
           cache: npm
 
+      # Se usa npm install y no npm ci a proposito. El package-lock.json se
+      # genero en Windows, asi que solo recoge los binarios nativos de
+      # Windows (rollup, esbuild, lightningcss). El runner es Linux, npm ci no
+      # los trae y vite no arranca. npm install respeta las versiones del
+      # lockfile y solo rellena lo que falta, de modo que aqui anade los
+      # binarios de Linux sin tocar ninguna version.
       - name: Instalar dependencias
-        run: npm ci
+        run: npm install --no-audit --no-fund
 
       - name: Compilar el frontend
         run: npm run build
