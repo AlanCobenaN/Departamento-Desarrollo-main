@@ -53,7 +53,7 @@ function Segmented({ icon, label, value, options, onChange }) {
             onClick={() => onChange(opt.value)}
             className={`flex-1 rounded-md px-2 py-1.5 text-xs font-bold transition ${
               value === opt.value
-                ? "bg-fcvt-primary text-white shadow-sm"
+                ? "bg-fcvt-primary text-white dark:text-fcvt-darker shadow-sm"
                 : "text-fcvt-gray hover:text-fcvt-primary dark:hover:text-fcvt-accent"
             }`}
           >
@@ -123,7 +123,7 @@ export default function AccessibilityMenu() {
       >
         <i className="fa-solid fa-universal-access" aria-hidden="true" />
         {activeCount > 0 && (
-          <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-fcvt-accent px-1 text-[10px] font-bold text-fcvt-darker">
+          <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-gradient-to-br from-fcvt-accent-from to-fcvt-accent-to px-1 text-[10px] font-bold text-fcvt-darker">
             {activeCount}
           </span>
         )}
@@ -232,7 +232,7 @@ export default function AccessibilityMenu() {
               type="button"
               onClick={reset}
               disabled={activeCount === 0}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-fcvt-lighter px-4 py-2.5 text-xs font-bold text-fcvt-primary transition hover:bg-fcvt-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-40 dark:bg-white/10 dark:text-fcvt-accent"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-fcvt-lighter px-4 py-2.5 text-xs font-bold text-fcvt-primary dark:text-fcvt-dark transition hover:bg-fcvt-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-40 dark:bg-white/10 dark:text-fcvt-accent"
             >
               <i className="fa-solid fa-rotate-left" aria-hidden="true" />
               {t("a11y.reset")}

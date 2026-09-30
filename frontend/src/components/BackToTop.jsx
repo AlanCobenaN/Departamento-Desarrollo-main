@@ -36,7 +36,7 @@ export default function BackToTop() {
       onClick={goTop}
       aria-label={t("backToTop")}
       title={t("backToTop")}
-      className={`fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-fcvt-primary text-white shadow-xl transition-all duration-300 hover:bg-fcvt-primary-dark ${
+      className={`fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-fcvt-primary text-white dark:text-fcvt-darker shadow-xl transition-all duration-300 hover:bg-fcvt-primary-dark ${
         visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0"
       }`}
     >
@@ -53,12 +53,14 @@ export default function BackToTop() {
           stroke="rgba(255,255,255,0.25)"
           strokeWidth="3"
         />
+        {/* El arco queda en blanco al 75% en vez de usar --color-fcvt-accent:
+            sobre el boton azul el dorado solo daba 1.43:1 y el arco se perdia. */}
         <circle
           cx="24"
           cy="24"
           r={R}
           fill="none"
-          stroke="var(--color-fcvt-accent)"
+          stroke="rgba(255,255,255,0.75)"
           strokeWidth="3"
           strokeLinecap="round"
           strokeDasharray={circumference}

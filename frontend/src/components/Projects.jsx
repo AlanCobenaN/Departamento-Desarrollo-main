@@ -85,7 +85,7 @@ export default function Projects({ projects = [], loading = false, error = null,
               aria-pressed={category === "all"}
               className={`rounded-full px-3.5 py-1.5 text-xs font-bold transition ${
                 category === "all"
-                  ? "bg-fcvt-primary text-white"
+                  ? "bg-fcvt-primary text-white dark:text-fcvt-darker"
                   : "bg-fcvt-lighter text-fcvt-gray hover:text-fcvt-primary dark:bg-white/10 dark:text-fcvt-gray"
               }`}
             >
@@ -99,7 +99,7 @@ export default function Projects({ projects = [], loading = false, error = null,
                 aria-pressed={category === cat}
                 className={`rounded-full px-3.5 py-1.5 text-xs font-bold transition ${
                   category === cat
-                    ? "bg-fcvt-primary text-white"
+                    ? "bg-fcvt-primary text-white dark:text-fcvt-darker"
                     : "bg-fcvt-lighter text-fcvt-gray hover:text-fcvt-primary dark:bg-white/10 dark:text-fcvt-gray"
                 }`}
               >
@@ -157,7 +157,7 @@ export default function Projects({ projects = [], loading = false, error = null,
             <button
               type="button"
               onClick={onRetry}
-              className="mt-4 rounded-lg bg-fcvt-primary px-5 py-2.5 text-sm font-bold text-white transition hover:bg-fcvt-primary-dark"
+              className="mt-4 rounded-lg bg-fcvt-primary px-5 py-2.5 text-sm font-bold text-white dark:text-fcvt-darker transition hover:bg-fcvt-primary-dark"
             >
               <i className="fa-solid fa-rotate-right mr-2" aria-hidden="true" />
               {t("projects.reintentar")}
@@ -183,7 +183,7 @@ export default function Projects({ projects = [], loading = false, error = null,
           <button
             type="button"
             onClick={clearFilters}
-            className="mt-4 rounded-lg bg-fcvt-primary px-5 py-2.5 text-sm font-bold text-white transition hover:bg-fcvt-primary-dark"
+            className="mt-4 rounded-lg bg-fcvt-primary px-5 py-2.5 text-sm font-bold text-white dark:text-fcvt-darker transition hover:bg-fcvt-primary-dark"
           >
             {t("projects.limpiar")}
           </button>
@@ -211,7 +211,7 @@ export default function Projects({ projects = [], loading = false, error = null,
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   {project.categoria && (
-                    <span className="absolute left-3 top-3 rounded-md bg-fcvt-primary/95 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
+                    <span className="absolute left-3 top-3 rounded-md bg-fcvt-primary/95 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-white dark:text-fcvt-darker">
                       {project.categoria}
                     </span>
                   )}

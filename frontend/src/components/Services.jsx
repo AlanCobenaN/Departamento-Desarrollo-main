@@ -36,12 +36,12 @@ export default function Services() {
               <article className="group relative h-full overflow-hidden rounded-xl bg-fcvt-light p-6 ring-1 ring-fcvt-lighter transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-fcvt-primary/30 dark:bg-white/5 dark:ring-white/10">
                 {/* Filete superior que se despliega al pasar el mouse */}
                 <span
-                  className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-fcvt-accent transition-transform duration-300 group-hover:scale-x-100"
+                  className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-fcvt-accent-from to-fcvt-accent-to transition-transform duration-300 group-hover:scale-x-100"
                   aria-hidden="true"
                 />
 
                 <div className="flex items-center justify-between">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-fcvt-primary/10 text-lg text-fcvt-primary transition group-hover:bg-fcvt-primary group-hover:text-white dark:bg-fcvt-accent/15 dark:text-fcvt-accent">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-fcvt-primary/10 text-lg text-fcvt-primary transition group-hover:bg-fcvt-primary group-hover:text-white dark:bg-gradient-to-br dark:from-fcvt-accent-from/15 dark:to-fcvt-accent-to/15 dark:text-fcvt-accent">
                     <i className={area.icon} aria-hidden="true" />
                   </span>
                   <span className="text-2xl font-extrabold text-fcvt-lighter dark:text-white/15">

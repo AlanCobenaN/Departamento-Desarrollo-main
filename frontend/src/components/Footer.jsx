@@ -23,8 +23,8 @@ export default function Footer() {
       className="footer-grid relative overflow-hidden bg-fcvt-darker text-white"
     >
       {/* Filete dorado con barrido de luz */}
-      <div className="h-1 w-full overflow-hidden bg-fcvt-accent/40" aria-hidden="true">
-        <div className="animate-sheen h-full w-1/3 bg-fcvt-accent" />
+      <div className="h-1 w-full overflow-hidden bg-gradient-to-r from-fcvt-accent-from/40 to-fcvt-accent-to/40" aria-hidden="true">
+        <div className="animate-sheen h-full w-1/3 bg-gradient-to-r from-fcvt-accent-from to-fcvt-accent-to" />
       </div>
 
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-3 lg:px-8">

@@ -4,24 +4,39 @@
 
 /* ============================================================
    Tokens de diseño — tema Academi ULEAM
-   Paleta de azul institucional (#003E70) y dorado de acento (#DCA757).
+   Paleta extraída del logo "logo_40_años": azul institucional en
+   tono 207° y dorado en tono 37°. El blanco y sus derivados del
+   logo quedaron excluidos a propósito.
+
    El modo oscuro re-mapea las mismas variables, por lo que todos
    los componentes se adaptan sin condicionales.
 
-   Sobre el dorado: solo es legible como texto sobre azul oscuro o
-   como relleno con texto oscuro encima. Sobre fondo claro queda en
-   ~2.1:1, por debajo del mínimo de 4.5:1. Para textos de apoyo sobre
-   superficie clara usar --color-fcvt-primary.
+   Sobre el dorado: es legible sobre el azul (4.55:1) y como relleno
+   con texto oscuro encima, pero sobre superficie clara queda por
+   debajo de 4.5:1. Para textos de apoyo en fondo claro usar
+   --color-fcvt-primary.
+
+   Los rellenos dorados llevan degradado (accent-from → accent-to, dos
+   dorados reales del logo). Los textos y bordes siguen en dorado sólido:
+   un degradado en texto exige background-clip: text, que pierde el color
+   en modo de alto contraste de Windows y deja el texto invisible.
    ============================================================ */
 @theme {
-  --color-fcvt-primary: #003E70;
-  --color-fcvt-primary-dark: #00294C;
-  --color-fcvt-primary-light: #00508F;
-  --color-fcvt-accent: #DCA757;
-  --color-fcvt-accent-soft: #F6E7CF;
+  --color-fcvt-primary: #034B88;
+  --color-fcvt-primary-dark: #0B2F54;
+  --color-fcvt-primary-light: #1C66A0;
+  --color-fcvt-accent: #DCB469;
+  --color-fcvt-accent-soft: #F5E9D6;
 
-  --color-fcvt-dark: #003E70;
-  --color-fcvt-darker: #00294C;
+  /* Extremos del degradado dorado. Los dos son dorados reales del logo:
+     el claro al 69% y el profundo al 54% de luminosidad. El profundo
+     es el más oscuro que aún mantiene 5.09:1 con el texto oscuro del
+     botón, así que no se puede bajar más sin romper el contraste. */
+  --color-fcvt-accent-from: #E8C57A;
+  --color-fcvt-accent-to: #C9954B;
+
+  --color-fcvt-dark: #034B88;
+  --color-fcvt-darker: #034B88;
 
   --color-fcvt-gray: #55637A;
   --color-fcvt-light: #F5F7FB;
@@ -29,24 +44,27 @@
   --color-fcvt-white: #ffffff;
 }
 
-/* ---------- Modo oscuro (azul claro + dorado aclarado) ----------
-   Los tres azules de marca son demasiado oscuros para leerse sobre
-   un fondo casi negro (#003E70 da 1.67:1 sobre #0A1526), así que aquí
-   se usa una serie clara equivalente en tono. */
+/* ---------- Modo oscuro ----------
+   Los azules del logo (#034B88 da 1.68:1 sobre un fondo oscuro) son
+   demasiado oscuros para leerse como texto, así que aquí se usa una
+   serie clara derivada en el MISMO tono 207° del logo. Los fondos
+   también se derivan de ese tono y suben de luminosidad para que la
+   página no se lea como un vacío. El dorado se mantiene: ya es
+   legible sobre fondo oscuro (6.96:1). */
 .dark {
-  --color-fcvt-primary: #4A90D9;
-  --color-fcvt-primary-dark: #3A6FD0;
-  --color-fcvt-primary-light: #6BA3E0;
-  --color-fcvt-accent: #E8B96A;
-  --color-fcvt-accent-soft: #3A2E1A;
+  --color-fcvt-primary: #49A1E9;
+  --color-fcvt-primary-dark: #258EE4;
+  --color-fcvt-primary-light: #6EB4ED;
+  --color-fcvt-accent: #DCB469;
+  --color-fcvt-accent-soft: #3F3422;
 
   --color-fcvt-dark: #E8EEF9;
-  --color-fcvt-darker: #060F1F;
+  --color-fcvt-darker: #0B2F54;
 
   --color-fcvt-gray: #9BAAC4;
-  --color-fcvt-light: #0A1526;
-  --color-fcvt-lighter: #16233A;
-  --color-fcvt-white: #0E1B30;
+  --color-fcvt-light: #12314C;
+  --color-fcvt-lighter: #235578;
+  --color-fcvt-white: #1A4265;
 }
 
 /* ---------- Base ---------- */
@@ -308,15 +326,15 @@ html[data-reduce-motion="true"] .enter {
 }
 
 /* --- Latido suave para el CTA principal ---
-   El halo usa el rgb del dorado de acento (#DCA757) para acompañar al
+   El halo usa el rgb del dorado de acento (#DCB469) para acompañar al
    botón, que ya no es azul. */
 @keyframes pulse-glow {
   0%,
   100% {
-    box-shadow: 0 10px 25px -8px rgba(220, 167, 87, 0.55);
+    box-shadow: 0 10px 25px -8px rgba(220, 180, 105, 0.55);
   }
   50% {
-    box-shadow: 0 14px 38px -8px rgba(220, 167, 87, 0.85);
+    box-shadow: 0 14px 38px -8px rgba(220, 180, 105, 0.85);
   }
 }
 .animate-pulse-glow {
@@ -454,8 +472,8 @@ html[data-reduce-motion="true"] .enter {
   background: var(--color-fcvt-lighter);
   color: var(--color-fcvt-dark);
   text-align: center;
-  /* La sombra lleva el azul oscuro de marca (#00294C) como tinte. */
-  box-shadow: 0 1px 3px rgba(0, 41, 76, 0.08);
+  /* La sombra lleva el azul oscuro de marca (#0B2F54) como tinte. */
+  box-shadow: 0 1px 3px rgba(11, 47, 84, 0.08);
   /* Al girar, las fichas de la mitad trasera se ocultan solas */
   backface-visibility: hidden;
   transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;

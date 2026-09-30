@@ -5,21 +5,23 @@
 // Estos pares viven aquí y no en index.css porque el SVG se hornea como
 // data-URI: al generarse no puede leer las variables CSS del documento.
 // Si se cambia la paleta hay que actualizar esta lista a mano.
+// Todos los stops son azules reales extraídos del logo "logo_40_años"
+// (azules de 18% a 37% de luminosidad, tono 207-210°).
 const PALETTE = [
-  ["#003E70", "#00294C"],
-  ["#00508F", "#003E70"],
-  ["#00407A", "#002A50"],
-  ["#003E70", "#081A2E"],
-  ["#00548F", "#00345C"],
-  ["#0A4B7A", "#003050"],
-  ["#00385F", "#001F38"],
-  ["#00508F", "#00294C"],
+  ["#015394", "#053068"],
+  ["#034B88", "#0B2F54"],
+  ["#185386", "#003D79"],
+  ["#034B88", "#003D79"],
+  ["#015394", "#0B2F54"],
+  ["#185386", "#0B2F54"],
+  ["#034B88", "#053068"],
+  ["#003D79", "#0B2F54"],
 ];
 
-// El texto de la categoría necesita un dorado más claro que el de marca:
-// sobre el stop más claro de los degradados (#00548F) el #DCA757 queda en
-// 3.64:1 y no llega al 4.5:1 que pide la norma para texto pequeño.
-const ACCENT_TEXT = "239, 192, 119";
+// El texto de la categoría usa un dorado más claro que el de marca: sobre el
+// fondo real donde cae (mezcla del degradado al 31% más el velo negro al 16%)
+// el #DCB469 no llega al 4.5:1, y este #E8C57A —también del logo— sí.
+const ACCENT_TEXT = "232, 197, 122";
 
 function initialsOf(name = "") {
   const words = String(name)

@@ -107,7 +107,7 @@ export default function Hero({ projectCount = 0 }) {
           >
             <a
               href="#proyectos"
-              className="animate-pulse-glow inline-flex items-center gap-2 rounded-lg bg-fcvt-accent px-6 py-3 text-sm font-bold text-fcvt-darker transition hover:bg-fcvt-accent/90"
+              className="animate-pulse-glow inline-flex items-center gap-2 rounded-lg bg-gradient-to-br from-fcvt-accent-from to-fcvt-accent-to px-6 py-3 text-sm font-bold text-fcvt-darker transition hover:from-fcvt-accent-from/90 hover:to-fcvt-accent-to/90"
             >
               {t("hero.primaryCta")}
               <i className="fa-solid fa-arrow-down text-xs" aria-hidden="true" />
@@ -131,7 +131,7 @@ export default function Hero({ projectCount = 0 }) {
               className="enter animate-float flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-sm"
             >
               <i
-                className={`${stat.icon} flex h-9 w-9 items-center justify-center rounded-lg bg-fcvt-accent/15 text-sm text-fcvt-accent`}
+                className={`${stat.icon} flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-fcvt-accent-from/15 to-fcvt-accent-to/15 text-sm text-fcvt-accent`}
                 aria-hidden="true"
               />
               <div>
@@ -153,7 +153,7 @@ export default function Hero({ projectCount = 0 }) {
         <div aria-hidden="true" className="absolute inset-x-0 bottom-0 z-10 h-1 bg-black/25">
           <div
             key={index}
-            className="hero-progress h-full w-full bg-fcvt-accent"
+            className="hero-progress h-full w-full bg-gradient-to-r from-fcvt-accent-from to-fcvt-accent-to"
             style={{ "--hero-slide-ms": `${SLIDE_MS}ms` }}
           />
         </div>
