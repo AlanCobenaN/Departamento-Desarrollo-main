@@ -6,6 +6,19 @@ Eloy Alfaro de Manabí.
 ## Puesta en marcha
 
 ```bash
+./inicio
+```
+
+`inicio` deja todo listo y levanta los dos servicios a la vez. Antes
+comprueba que Node sea el adecuado, crea los `.env` que falten a partir de
+los `.env.example`, instala las dependencias si no están, y avisa si los
+puertos ya están ocupados en vez de arrancar en otro sitio sin decirlo.
+
+Para arrancar en otro puerto: `FRONT_PORT=5175 ./inicio`.
+
+Equivale a `npm install && npm run dev`, que se puede seguir usando:
+
+```bash
 npm install
 npm run dev
 ```
