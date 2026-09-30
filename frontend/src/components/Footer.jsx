@@ -33,14 +33,14 @@ export default function Footer() {
           <div className="flex items-center gap-3">
             <img src={site.logoShield} alt="" width="320" height="320" className="h-11 w-11" />
             <span className="text-lg font-extrabold leading-tight">
-              {site.shortName}
+              {site.faculty}
               <span className="block text-[11px] font-medium uppercase tracking-wider text-fcvt-accent">
                 {site.university}
               </span>
             </span>
           </div>
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/70">
-            {site.faculty}
+            {site.slogan}
           </p>
           <p className="mt-4 text-xs text-white/40">{t("footer.placeholders")}</p>
         </Reveal>

@@ -57,9 +57,9 @@ export function coverFor(project = {}, index = 0) {
     `<text x="36" y="140" font-family="Arial,Helvetica,sans-serif" font-size="104" font-weight="800" fill="rgba(255,255,255,0.95)">${label}</text>` +
     `<text x="36" y="196" font-family="Arial,Helvetica,sans-serif" font-size="21" font-weight="700" fill="rgba(255,255,255,0.88)">${title.slice(0, 34)}</text>` +
     (categoria
-      ? `<text x="36" y="226" font-family="Arial,Helvetica,sans-serif" font-size="14" letter-spacing="2" fill="rgba(201,162,39,0.95)">${categoria.toUpperCase()}</text>`
+      ? `<text x="36" y="226" font-family="Arial,Helvetica,sans-serif" font-size="14" letter-spacing="2" fill="rgba(142,199,255,0.95)">${categoria.toUpperCase()}</text>`
       : "") +
-    `<text x="36" y="374" font-family="Arial,Helvetica,sans-serif" font-size="14" letter-spacing="3" fill="rgba(255,255,255,0.65)">FCVT · ULEAM</text>` +
+    `<text x="36" y="374" font-family="Arial,Helvetica,sans-serif" font-size="14" letter-spacing="3" fill="rgba(255,255,255,0.65)">Facultad de Ciencias de la Vida y Tecnologías</text>` +
     `</svg>`;
 
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;

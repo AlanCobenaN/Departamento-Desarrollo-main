@@ -19,6 +19,15 @@ const site = {
   heroImage: "/hero-galeria.jpg", // portada optimizada del slider (76 KB)
   galleryImage: "/galeria-demo.jpg", // vista de la galería (53 KB)
 
+  // Fondos del carrusel de la portada. Son imagenes de ejemplo del
+  // prototipo; se reemplazan por fotos reales solo cambiando esta lista.
+  heroSlides: [
+    { src: "/hero-galeria.jpg", alt: "" },
+    { src: "/galeria-demo.jpg", alt: "" },
+    { src: "/img/galeria/pantalla-1.svg", alt: "" },
+    { src: "/img/galeria/pantalla-3.svg", alt: "" },
+  ],
+
   // Imágenes de ejemplo del prototipo (mockups de interfaz)
   screens: [
     { file: "/img/galeria/pantalla-1.svg", key: "gallery.s1" },
@@ -69,7 +78,10 @@ export const translations = {
       principal: "Navegación principal",
     },
     hero: {
-      badge: "Equipo interno de desarrollo",
+      carrusel: "Galería de la portada",
+      anterior: "Imagen anterior",
+      siguiente: "Imagen siguiente",
+      irA: "Ir a la imagen",
       title: "Sistemas web, apps y herramientas que ahorran horas a la facultad.",
       lead:
         "Diseñamos herramientas digitales para estudiantes, docentes y personal administrativo de la facultad.",
@@ -183,7 +195,10 @@ export const translations = {
       principal: "Main navigation",
     },
     hero: {
-      badge: "Internal development team",
+      carrusel: "Hero image gallery",
+      anterior: "Previous image",
+      siguiente: "Next image",
+      irA: "Go to image",
       title: "Web systems, apps and tools that save the college hours.",
       lead:
         "We design digital tools for students, faculty and administrative staff.",

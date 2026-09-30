@@ -53,6 +53,21 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  /* Tipografía del cuerpo: una humanista de sistema, de lectura más abierta
+     que la por defecto de Tailwind. El navbar queda fuera con su propio
+     bloque de abajo. */
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif;
+}
+
+/* El navbar conserva la tipografía original del tema (system-ui).
+   El selector universal alcanza también a los <i> de Font Awesome, y al
+   declararles font-family se les cae el glifo y salen como cuadraditos.
+   Por eso los iconos quedan fuera con :not(). */
+header.navbar-fcvt,
+header.navbar-fcvt *:not([class*="fa-"]) {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif;
 }
 
 /* Foco visible y consistente (accesibilidad de teclado) */
@@ -184,6 +199,13 @@ html[data-dyslexia="true"] body {
   word-spacing: 0.14em;
   line-height: 1.7;
 }
+/* También el navbar: si no, la regla de header.navbar-fcvt * le gana por
+   orden de cascada y quien pida la fuente fácil no la obtendría ahí.
+   Mismo descarte de iconos que en la tipografía del navbar. */
+html[data-dyslexia="true"] .navbar-fcvt,
+html[data-dyslexia="true"] .navbar-fcvt *:not([class*="fa-"]) {
+  font-family: "Comic Sans MS", "Trebuchet MS", Verdana, sans-serif;
+}
 
 /* --- Subrayar todos los enlaces (no solo los que están en azul) --- */
 html[data-underline-links="true"] a {
@@ -313,6 +335,24 @@ html[data-reduce-motion="true"] .enter {
 }
 .animate-sheen {
   animation: sheen 7s ease-in-out infinite;
+}
+
+/* --- Indicador de avance del carrusel de la portada ---
+   La barra se rellena de izquierda a derecha durante el tiempo que dura
+   cada diapositiva. Se reinicia cambiando la key del elemento, no con la
+   animación sola: si solo se reinicia la animación, el navegador puede
+   conservar el progreso anterior. */
+@keyframes hero-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.hero-progress {
+  transform-origin: left center;
+  animation: hero-progress var(--hero-slide-ms, 7000ms) linear forwards;
 }
 
 /* ============================================================
