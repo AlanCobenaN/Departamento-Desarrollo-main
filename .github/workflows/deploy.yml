@@ -50,9 +50,9 @@ jobs:
       - name: Anadir los binarios nativos de Linux
         run: |
           npm install --no-save --no-audit --no-fund \
-            "@rollup/rollup-linux-x64-gnu@$(node -p "require('rollup/package.json').version")" \
-            "lightningcss-linux-x64-gnu@$(node -p "require('lightningcss/package.json').version")" \
-            "@esbuild/linux-x64@$(node -p "require('esbuild/package.json').version")"
+            "@rollup/rollup-linux-x64-gnu@$(node -p "require('./node_modules/rollup/package.json').version")" \
+            "lightningcss-linux-x64-gnu@$(node -p "require('./node_modules/lightningcss/package.json').version")" \
+            "@esbuild/linux-x64@$(node -p "require('./node_modules/esbuild/package.json').version")"
 
       - name: Compilar el frontend
         run: npm run build
