@@ -1,6 +1,11 @@
 # Dependencias
 node_modules/
 
+# Vercel
+# frontend/.gitignore ya lo ignora, pero el proyecto conectado a Vercel
+# usa la raiz del repo, que es donde apareceria esta carpeta.
+.vercel/
+
 # Entorno
 .env
 .env.local
