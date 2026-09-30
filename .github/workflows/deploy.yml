@@ -37,22 +37,27 @@ jobs:
           node-version: 24
           cache: npm
 
-      # El package-lock.json se genero en Windows, asi que solo guarda los
-      # binarios nativos de Windows para rollup, esbuild y lightningcss. El
-      # runner es Linux y vite no arranca sin los suyos. npm ci no los trae y
-      # npm install tampoco, porque ve el arbol como completo y no rehace
-      # nada. Hay que anadirlos aparte, cada uno en la version exacta del
-      # paquete que lo usa, leida del propio node_modules para que el
-      # arreglo siga valiendo cuando se actualicen.
+      # El package-lock.json se genero en Windows, asi que de los cuatro
+      # paquetes que usan binario nativo (rollup, lightningcss, esbuild y
+      # @tailwindcss/oxide) solo guarda la variante de Windows. El runner es
+      # Linux: npm ci no trae esos binarios, y npm install tampoco, porque ve
+      # el arbol como completo y no rehace nada. Por eso se anaden aparte en
+      # el paso siguiente.
       - name: Instalar dependencias
         run: npm install --no-audit --no-fund
 
+      # Una variante linux-x64 por cada paquete nativo, cada una en la version
+      # exacta del paquete que la usa. La version se lee de su package.json
+      # por ruta directa, porque algunos de estos paquetes no exponen
+      # ./package.json en su campo exports y require() por nombre falla.
+      # Asi el arreglo sigue valiendo cuando se actualice cualquiera de ellos.
       - name: Anadir los binarios nativos de Linux
         run: |
           npm install --no-save --no-audit --no-fund \
             "@rollup/rollup-linux-x64-gnu@$(node -p "require('./node_modules/rollup/package.json').version")" \
             "lightningcss-linux-x64-gnu@$(node -p "require('./node_modules/lightningcss/package.json').version")" \
-            "@esbuild/linux-x64@$(node -p "require('./node_modules/esbuild/package.json').version")"
+            "@esbuild/linux-x64@$(node -p "require('./node_modules/esbuild/package.json').version")" \
+            "@tailwindcss/oxide-linux-x64-gnu@$(node -p "require('./node_modules/@tailwindcss/oxide/package.json').version")"
 
       - name: Compilar el frontend
         run: npm run build
