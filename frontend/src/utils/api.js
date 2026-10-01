@@ -1,6 +1,12 @@
 import projectsFallback from "../data/projects.js";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
+// La API solo se despliega junto al frontend en local. En GitHub Pages se sube
+// unicamente frontend/dist, asi que dejar "http://localhost:4000/api" como valor
+// por defecto hacia que el navegador pidiera permiso de acceso a la red local al
+// abrir el sitio publicado. Sin VITE_API_URL se usan los datos locales.
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV ? "http://localhost:4000/api" : null);
 
 // La portada muestra solo una selección. La API puede traer el catálogo
 // completo, pero la landing enseña 4 destacados para no saturar.
@@ -30,6 +36,11 @@ function normalize(payload) {
  * responde o devuelve un error, se cae a un respaldo local idéntico.
  */
 export async function fetchProjects() {
+  // Sin API publicada no hay nada que consultar: se responde con el respaldo.
+  if (!API_URL) {
+    return normalize(projectsFallback);
+  }
+
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 4000);
 
