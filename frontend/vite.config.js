@@ -1,6 +1,7 @@
 ﻿import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+import { fileURLToPath } from "node:url";
 
 export default defineConfig({
   // GitHub Pages publica el sitio en .../Departamento-Desarrollo-main/, no en
@@ -9,6 +10,19 @@ export default defineConfig({
   // que es lo que necesita http://localhost:5173.
   base: process.env.BASE_PATH || "/",
   plugins: [react(), tailwindcss()],
+
+  build: {
+    rollupOptions: {
+      // Dos paginas y dos entradas. El acceso va en login/index.html y no en
+      // una ruta de React porque en GitHub Pages una carpeta es una ruta de
+      // verdad: /login/ se sirve sin ningun truco, mientras que una ruta de
+      // router que no exista en disco daria 404 al recargarla o al compartirla.
+      input: {
+        main: fileURLToPath(new URL("./index.html", import.meta.url)),
+        login: fileURLToPath(new URL("./login/index.html", import.meta.url)),
+      },
+    },
+  },
 
   server: {
     // inicio.mjs pasa --port y --strictPort, asi que el puerto definitivo sale

@@ -160,20 +160,19 @@ export default function NavMenu() {
           </div>
 
           <div className="border-t border-fcvt-lighter p-3 dark:border-white/10">
-            <span title={t("nav.proximamente")} className="block">
-              <button
-                type="button"
-                aria-disabled="true"
-                aria-describedby="nav-login-aviso"
-                className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-fcvt-accent-from to-fcvt-accent-to px-4 py-2.5 text-sm font-extrabold text-fcvt-darker"
-              >
-                <i className="fa-solid fa-right-to-bracket" aria-hidden="true" />
-                {t("nav.login")}
-              </button>
-              <span id="nav-login-aviso" className="sr-only">
-                {t("nav.proximamente")}
-              </span>
-            </span>
+            {/* Pagina aparte, con su propia carga y su propia URL. Es un <a> y
+                no un boton con onClick a proposito: asi el enlace se puede
+                abrir en pestana nueva, copiar o compartir con el boton derecho,
+                y el boton central del teclado lo abre sin que haga falta
+                codificar un atajo. El destino lleva BASE_URL porque en GitHub
+                Pages el sitio no vive en la raiz del dominio. */}
+            <a
+              href={`${import.meta.env.BASE_URL}login/`}
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-fcvt-accent-from to-fcvt-accent-to px-4 py-2.5 text-sm font-extrabold text-fcvt-darker transition hover:brightness-105"
+            >
+              <i className="fa-solid fa-right-to-bracket" aria-hidden="true" />
+              {t("nav.login")}
+            </a>
           </div>
         </div>
       )}

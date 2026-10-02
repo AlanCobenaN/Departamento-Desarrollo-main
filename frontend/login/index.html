@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>FCVT · Universidad Laica Eloy Alfaro de Manabí</title>
+    <title>Iniciar sesión · FCVT ULEAM</title>
     <meta
       name="description"
-      content="Portafolio del equipo de desarrollo de la Facultad de Ciencias de la Vida y Tecnologías de la ULEAM. Proyectos, tecnologías y galería."
+      content="Acceso al área interna del equipo de desarrollo de la Facultad de Ciencias de la Vida y Tecnologías de la ULEAM."
     />
-    <meta name="author" content="Equipo de Desarrollo FCVT · ULEAM" />
+    <meta name="robots" content="noindex, nofollow" />
     <meta name="theme-color" content="#034B88" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#1A4265" media="(prefers-color-scheme: dark)" />
 
@@ -27,18 +27,13 @@
     referrerpolicy="no-referrer"
     />
     <script>
-      // Aplica tema, idioma y ajustes de accesibilidad ANTES del primer pintado.
-      //
-      // React lee esas mismas preferencias al montar (SiteContext y
-      // AccessibilityContext), pero lo hace en un useEffect, es decir despues de
-      // que el navegador ya ha pintado: sin esto, una recarga en modo oscuro o
-      // con texto grande daba un destello claro de la pagina entera. Aqui se
-      // replican los valores por defecto, que son los mismos de
-      // AccessibilityContext.jsx (A11Y_DEFAULTS).
+      // Copia exacta del script anti-destello de ../index.html. Tiene que estar
+      // tambien en esta pagina: es una carga aparte y sin el, entrar al acceso
+      // con el tema oscuro puesto mostraria un fogonazo claro antes de que
+      // monte React.
       (function () {
         var root = document.documentElement;
         try {
-          // Tema: fcvt-theme, con la preferencia del sistema como reserva.
           var theme = localStorage.getItem("fcvt-theme");
           if (theme !== "dark" && theme !== "light") {
             theme =
@@ -50,11 +45,9 @@
           if (theme === "dark") root.classList.add("dark");
           root.style.colorScheme = theme;
 
-          // Idioma: fcvt-lang
           var lang = localStorage.getItem("fcvt-lang");
           root.lang = lang === "en" ? "en" : "es";
 
-          // Accesibilidad: fcvt-a11y (un objeto JSON con los ajustes)
           var a11y = JSON.parse(localStorage.getItem("fcvt-a11y") || "{}");
           var ATTR = {
             textSize: "text-size",
@@ -92,6 +85,6 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="/src/login-main.jsx"></script>
   </body>
 </html>
