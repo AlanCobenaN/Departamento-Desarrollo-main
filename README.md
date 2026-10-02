@@ -33,6 +33,7 @@ postgres -D <carpeta-de-datos>
 |---|---|
 | `npm run build` | Compila el frontend a `frontend/dist` |
 | `npm run preview` | Sirve la compilación en local |
+| `npm run catalogo` | Exporta la base a `frontend/public/catalogo.json` |
 | `npm run dev:api` | Solo la API |
 | `npm run dev:frontend` | Solo el frontend |
 
@@ -64,19 +65,31 @@ que leerá el sitio.
 | `GET /api/projects` | Catálogo completo, en `{ ok, data }` |
 | `GET /api/projects/{id}` | Un proyecto, o 404 en `{ ok: false, error: { message } }` |
 
-Los proyectos salen de PostgreSQL. No hay copia en el frontend: si la API no
-responde, el sitio lo avisa en vez de mostrar un catálogo que puede estar
-desfasado.
+Los proyectos salen de PostgreSQL. No hay copia escrita a mano en el código:
+si la API no responde, el sitio cae a `frontend/public/catalogo.json`, una foto
+del catálogo exportada de la base.
+
+## La foto del catálogo
+
+Es lo que permite publicar el sitio antes de tener la API alojada en algún
+sitio. Cuando la API esté desplegada, manda ella y la foto deja de usarse.
+
+Es una foto y no una copia viva, así que **después de cambiar algo en la base
+hay que regenerarla**:
+
+```bash
+npm run catalogo
+```
 
 ## Despliegue
 
 El frontend se publica solo en GitHub Pages con cada push a `main`.
 
-Hay que crear la variable de repositorio **VITE_API_URL** en
-*Settings → Secrets and variables → Actions → Variables* con la URL pública de
-la API. Sin ella el despliegue se detiene a propósito, porque el valor queda
-incrustado en el JavaScript al compilar.
-
 **La API y la base no salen de GitHub Pages.** Es un hosting estático y no
 ejecuta PHP ni tiene base de datos. Van en un hosting con PHP o en una máquina
 propia.
+
+Cuando esa API exista, crea la variable de repositorio **VITE_API_URL** en
+*Settings → Secrets and variables → Actions → Variables* con su URL pública, y
+el sitio pasará a consultarla. Hasta entonces el despliegue se avisa pero no se
+detiene, porque la foto del catálogo cubre el hueco.

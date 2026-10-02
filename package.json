@@ -11,6 +11,7 @@
     "dev": "node inicio.mjs",
     "dev:api": "php -S localhost:8000 -t api/public",
     "dev:frontend": "npm run dev --workspace frontend",
+    "catalogo": "php api/database/export.php",
     "build": "npm run build --workspace frontend",
     "preview": "npm run preview --workspace frontend"
   },

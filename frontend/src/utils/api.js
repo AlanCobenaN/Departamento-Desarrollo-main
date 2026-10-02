@@ -1,25 +1,30 @@
-// La API del catalogo es obligatoria. Antes habia un respaldo con los mismos
-// ocho proyectos copiados a mano en el frontend, pero con PostgreSQL como
-// fuente unica esa copia solo puede desincronizarse y acabar mostrando datos
-// que ya no existen en la base.
+// La fuente de verdad es la API en PHP, que lee de PostgreSQL. Cuando no se
+// puede consultar, el sitio cae a una foto del catalogo exportada de la base
+// (frontend/public/catalogo.json, generada con `npm run catalogo`), de modo que
+// la pagina nunca se queda a medias aunque la API todavia no este alojada.
 //
-// Si la API no responde, fetchProjects rechaza y App.jsx se encarga de
-// mostrar el estado de error con su boton de reintentar.
-
+// La foto es lo que permitio publicar en GitHub Pages sin montar todavia el
+// backend. Es una foto y no una copia viva: si se edita un proyecto en la base
+// hay que volver a exportarla, y mientras no se haga mandara ella.
+//
 // En desarrollo el servidor de PHP escucha en el 8000. En produccion no hay
-// valor por defecto: VITE_API_URL se incrusta al compilar, y si falta es un
-// fallo de configuracion que debe verse, no taparse con datos inventados.
+// valor por defecto: VITE_API_URL se incrusta al compilar, y si falta se usa la
+// foto en lugar de inventarse datos.
 const API_URL =
   import.meta.env.VITE_API_URL ||
   (import.meta.env.DEV ? "http://localhost:8000/api" : null);
+
+// Vive en public/, asi que Vite lo copia tal cual a dist/ y se pide con la
+// misma base que el resto de rutas del sitio publicado.
+const CATALOGO_URL = `${import.meta.env.BASE_URL}catalogo.json`;
 
 // Cuanto tiempo se espera antes de cortar. La base de datos esta en la misma
 // red que la API, asi que cuatro segundos es holgado.
 const TIMEOUT_MS = 4000;
 
-// La portada muestra solo una seleccion. El recorte va aqui y no en la API:
-// asi el catalogo completo sigue disponible para el buscador y para el futuro
-// panel de administracion.
+// El recorte a los destacados va aqui y no en la API, para que la foto del
+// catalogo guarde la lista entera y sea una copia fiel de la base. La API
+// seguiria pudiendo devolver mas cosas en el futuro sin tocar este archivo.
 const FEATURED_LIMIT = 4;
 
 /**
@@ -46,18 +51,31 @@ function normalizar(payload) {
 }
 
 /**
- * Descarga el catalogo de proyectos desde la API PHP.
+ * Descarga el catalogo de proyectos.
  *
- * @throws {Error} Si VITE_API_URL no esta definido, si la API no responde o si
- *                 devuelve algo que no es una lista de proyectos.
+ * Se intenta primero la API. Si no hay URL configurada, si no responde o si
+ * contesta algo que no es una lista, se cae a la foto exportada de la base.
+ * Solo si tampoco se puede leer la foto se rechaza, y entonces App.jsx muestra
+ * el estado de error con su boton de reintentar.
+ *
+ * @throws {Error} Si no hay API y tampoco se puede leer la foto del catalogo.
  */
 export async function fetchProjects() {
-  if (!API_URL) {
-    throw new Error(
-      "Falta VITE_API_URL. Sin ella el sitio no sabe donde vive la API.",
-    );
+  if (API_URL) {
+    try {
+      return await pedirCatalogo();
+    } catch (error) {
+      console.warn(
+        `[fcvt] La API en ${API_URL} no respondio (${error.message}). Se usa la foto del catalogo.`,
+      );
+    }
   }
 
+  return await pedirFoto();
+}
+
+/** Consulta la API PHP. Lanza si no contesta o si la respuesta no vale. */
+async function pedirCatalogo() {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
@@ -67,14 +85,47 @@ export async function fetchProjects() {
     });
 
     if (!response.ok) {
-      throw new Error(`El servidor respondió con estado ${response.status}.`);
+      throw new Error(`estado ${response.status}`);
     }
 
-    return normalizar(await response.json());
-  } catch (error) {
-    console.warn(`[fcvt] No se pudo cargar el catálogo desde ${API_URL}.`, error);
-    throw error;
+    const proyectos = normalizar(await response.json());
+
+    if (proyectos.length === 0) {
+      throw new Error("la lista vino vacia");
+    }
+
+    return proyectos;
   } finally {
     clearTimeout(timeoutId);
   }
+}
+
+/** Lee la foto del catalogo que se publico junto al sitio. */
+async function pedirFoto() {
+  let respuesta;
+
+  try {
+    respuesta = await fetch(CATALOGO_URL, { cache: "no-cache" });
+  } catch (error) {
+    throw new Error(
+      `No hay API disponible y tampoco se pudo leer ${CATALOGO_URL}. ` +
+        "Genera la foto con npm run catalogo.",
+    );
+  }
+
+  if (!respuesta.ok) {
+    throw new Error(
+      `${CATALOGO_URL} devolvio ${respuesta.status}. Genera la foto con npm run catalogo.`,
+    );
+  }
+
+  const proyectos = normalizar(await respuesta.json());
+
+  if (proyectos.length === 0) {
+    throw new Error("la foto del catalogo esta vacia. Regenerala con npm run catalogo.");
+  }
+
+  console.info("[fcvt] Catalogo servido desde la foto local, no desde la API.");
+
+  return proyectos;
 }

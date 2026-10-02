@@ -63,24 +63,24 @@ jobs:
       # de GitHub Pages, que es un hosting estatico y no ejecuta PHP ni tiene
       # base de datos. Ese despliegue es manual o vive en otro workflow.
       #
-      # VITE_API_URL se incrusta en el JavaScript al compilar, asi que sin ella
-      # el sitio se publicaria sin saber donde vive la API y cada visitante
-      # veria "No pudimos cargar los proyectos". Se comprueba antes de compilar
-      # para que el fallo aparezca aqui y no en el navegador de la gente.
+      # La API manda cuando esta desplegada. Si VITE_API_URL no esta puesta, el
+      # sitio se publica igual sirviendo la foto del catalogo que hay en
+      # frontend/public, asi que ya no hace falta detener el despliegue: basta
+      # con avisar, porque es facil publicar por error y no enterarse.
       #
       # Se lee de las variables del repositorio (Settings > Secrets and
       # variables > Actions > Variables), no de un secret, porque su valor
       # acaba visible en el navegador y no hay que tratarlo como credencial.
-      - name: Comprobar que hay URL de la API
+      - name: Avisar si falta la URL de la API
         env:
           VITE_API_URL: ${{ vars.VITE_API_URL }}
         run: |
           if [ -z "$VITE_API_URL" ]; then
-            echo "::error::Falta la variable VITE_API_URL del repositorio."
-            echo "::error::Settings > Secrets and variables > Actions > Variables"
-            exit 1
+            echo "::warning::Sin VITE_API_URL el sitio usara la foto del catalogo."
+            echo "::warning::El catalogo dejara de estar al dia hasta que se ejecute npm run catalogo."
+          else
+            echo "La API vive en: $VITE_API_URL"
           fi
-          echo "La API vive en: $VITE_API_URL"
 
       - name: Compilar el frontend
         run: npm run build
