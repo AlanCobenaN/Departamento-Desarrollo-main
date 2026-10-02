@@ -59,6 +59,29 @@ jobs:
             "@esbuild/linux-x64@$(node -p "require('./node_modules/esbuild/package.json').version")" \
             "@tailwindcss/oxide-linux-x64-gnu@$(node -p "require('./node_modules/@tailwindcss/oxide/package.json').version")"
 
+      # Solo se despliega el frontend. La API en PHP y PostgreSQL viven fuera
+      # de GitHub Pages, que es un hosting estatico y no ejecuta PHP ni tiene
+      # base de datos. Ese despliegue es manual o vive en otro workflow.
+      #
+      # VITE_API_URL se incrusta en el JavaScript al compilar, asi que sin ella
+      # el sitio se publicaria sin saber donde vive la API y cada visitante
+      # veria "No pudimos cargar los proyectos". Se comprueba antes de compilar
+      # para que el fallo aparezca aqui y no en el navegador de la gente.
+      #
+      # Se lee de las variables del repositorio (Settings > Secrets and
+      # variables > Actions > Variables), no de un secret, porque su valor
+      # acaba visible en el navegador y no hay que tratarlo como credencial.
+      - name: Comprobar que hay URL de la API
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+        run: |
+          if [ -z "$VITE_API_URL" ]; then
+            echo "::error::Falta la variable VITE_API_URL del repositorio."
+            echo "::error::Settings > Secrets and variables > Actions > Variables"
+            exit 1
+          fi
+          echo "La API vive en: $VITE_API_URL"
+
       - name: Compilar el frontend
         run: npm run build
         env:
@@ -66,6 +89,7 @@ jobs:
           # dominio. configure-pages devuelve esa ruta, asi que el valor se
           # calcula solo y no hay que editarlo si el repo cambia de nombre.
           BASE_PATH: ${{ steps.pages.outputs.base_path }}/
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
 
       - name: Subir el resultado
         uses: actions/upload-pages-artifact@v3

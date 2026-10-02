@@ -1,49 +1,82 @@
-﻿# Sitio web — Facultad de Ciencias de la Vida y Tecnologías (ULEAM)
+﻿# Sitio FCVT
 
-Web del equipo interno de desarrollo de la FCVT, de la Universidad Laica
-Eloy Alfaro de Manabí.
+Web del equipo interno de desarrollo de la Facultad de Ciencias de la Vida y
+Tecnologías (FCVT) de la ULEAM.
 
-## Puesta en marcha
+React y Vite en el navegador, PHP detrás, PostgreSQL guardando.
 
-```bash
-./inicio
-```
+## Requisitos
 
-`inicio` deja todo listo y levanta los dos servicios a la vez. Antes
-comprueba que Node sea el adecuado, crea los `.env` que falten a partir de
-los `.env.example`, instala las dependencias si no están, y avisa si los
-puertos ya están ocupados en vez de arrancar en otro sitio sin decirlo.
+Node 18 o superior, PHP 8.1 o superior con la extensión `pdo_pgsql`, y
+PostgreSQL 14 o superior.
 
-Para arrancar en otro puerto: `FRONT_PORT=5175 ./inicio`.
-
-Equivale a `npm install && npm run dev`, que se puede seguir usando:
+## Arrancar
 
 ```bash
 npm install
-npm run dev
+npm run inicio
 ```
 
-- Frontend (Vite) → http://localhost:5173
-- API (Express) → http://localhost:4000
+Queda en http://localhost:5173 y la API en http://localhost:8000/api.
 
-## Estructura
+`inicio.mjs` revisa que estén las tres herramientas, crea los `.env` que
+falten a partir de los `.env.example`, avisa si un puerto ya está ocupado y
+levanta frontend y API con las salidas etiquetadas.
 
-| Carpeta | Contenido |
-|---|---|
-| `frontend/` | React + Vite + Tailwind 4 |
-| `backend/` | API REST Express con el catálogo de proyectos |
-| `assets/` | Logos institucionales |
+PostgreSQL tiene que estar arrancado antes. Si no lo está:
 
-## Otros comandos
+```bash
+postgres -D <carpeta-de-datos>
+```
 
 | Comando | Qué hace |
 |---|---|
-| `npm run build` | Compila el frontend a `frontend/dist/` |
+| `npm run build` | Compila el frontend a `frontend/dist` |
 | `npm run preview` | Sirve la compilación en local |
-| `npm test` | Tests del backend |
+| `npm run dev:api` | Solo la API |
+| `npm run dev:frontend` | Solo el frontend |
 
-## Configuración
+## Base de datos
 
-Copiar `frontend/.env.example` y `backend/.env.example` a `.env` para cambiar
-puertos o la URL de la API. Sin `.env` se usan los valores por defecto de
-desarrollo.
+La base se crea una vez:
+
+```bash
+createdb fcvt
+```
+
+Y el esquema con los datos de ejemplo, cada vez que haga falta:
+
+```bash
+php api/database/migrate.php --seed
+```
+
+Sin `--seed` solo aplica el esquema. **El seed borra la tabla `proyectos`
+antes de insertar**, así que no lo ejecutes en producción.
+
+Va por PDO y usa el mismo `api/.env` que la API, así que carga exactamente lo
+que leerá el sitio.
+
+## API
+
+| Endpoint | Devuelve |
+|---|---|
+| `GET /api/health` | Estado del servicio y de la conexión |
+| `GET /api/projects` | Catálogo completo, en `{ ok, data }` |
+| `GET /api/projects/{id}` | Un proyecto, o 404 en `{ ok: false, error: { message } }` |
+
+Los proyectos salen de PostgreSQL. No hay copia en el frontend: si la API no
+responde, el sitio lo avisa en vez de mostrar un catálogo que puede estar
+desfasado.
+
+## Despliegue
+
+El frontend se publica solo en GitHub Pages con cada push a `main`.
+
+Hay que crear la variable de repositorio **VITE_API_URL** en
+*Settings → Secrets and variables → Actions → Variables* con la URL pública de
+la API. Sin ella el despliegue se detiene a propósito, porque el valor queda
+incrustado en el JavaScript al compilar.
+
+**La API y la base no salen de GitHub Pages.** Es un hosting estático y no
+ejecuta PHP ni tiene base de datos. Van en un hosting con PHP o en una máquina
+propia.
