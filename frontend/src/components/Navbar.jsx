@@ -2,13 +2,11 @@ import { useEffect, useState } from "react";
 import site from "../config/branding.js";
 import { useSite } from "../contexts/SiteContext.jsx";
 import AccessibilityMenu from "./AccessibilityMenu.jsx";
+import NavMenu from "./NavMenu.jsx";
 
 /**
- * Barra superior: marca a la izquierda (enlace a la portada) y controles de
+ * Barra superior: marca a la izquierda; menú de navegación (hamburguesa),
  * accesibilidad, idioma y tema a la derecha.
- *
- * No lleva lista de secciones: la navegación de la pagina vive en el propio
- * contenido y en el pie, asi que aqui solo queda la barra de utilidades.
  */
 export default function Navbar() {
   const { t, lang, toggleLang, dark, toggleTheme } = useSite();
@@ -30,7 +28,7 @@ export default function Navbar() {
     >
       {/* ---------- Fila 1: marca + controles ---------- */}
       <div className="border-b border-fcvt-lighter bg-white dark:border-white/10 dark:bg-fcvt-white">
-        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 pl-4 pr-14 sm:pl-6 sm:pr-16 lg:pl-8 lg:pr-16">
           {/* Marca: el escudo del footer, recoloreado con máscara CSS para
               que se vea sobre la fila clara sin necesitar un fondo */}
           <a href="#inicio" className="flex min-w-0 items-center gap-3" aria-label={site.faculty}>
@@ -77,6 +75,8 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+
+      <NavMenu />
     </header>
   );
 }

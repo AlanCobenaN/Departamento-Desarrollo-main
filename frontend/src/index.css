@@ -296,6 +296,22 @@ html[data-reduce-motion="true"] .enter {
   transform: none !important;
 }
 
+.nav-panel {
+  transform-origin: top right;
+  animation: nav-drop 0.18s ease;
+}
+
+@keyframes nav-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* --- Hero: entrada suave + efecto ken burns en el fondo --- */
 @keyframes fade-up {
   from {
