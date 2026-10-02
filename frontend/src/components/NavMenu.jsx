@@ -11,7 +11,7 @@ const sections = [
 ];
 
 export default function NavMenu() {
-  const { t } = useSite();
+  const { t, lang, toggleLang, dark, toggleTheme } = useSite();
   const [open, setOpen] = useState(false);
   const wrapRef = useRef(null);
   const panelRef = useRef(null);
@@ -130,6 +130,34 @@ export default function NavMenu() {
               </li>
             ))}
           </ul>
+
+          <div className="border-t border-fcvt-lighter px-2 py-2 sm:hidden dark:border-white/10">
+            <p className="px-3 pb-1 pt-1 text-[11px] font-bold uppercase tracking-wider text-fcvt-gray">
+              {t("nav.ajustes")}
+            </p>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={t("nav.tema")}
+              title={t("nav.tema")}
+              className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-fcvt-dark transition hover:bg-fcvt-lighter dark:text-fcvt-dark dark:hover:bg-white/5"
+            >
+              <i className={`${dark ? "fa-solid fa-sun" : "fa-solid fa-moon"} w-4 shrink-0 text-center text-sm text-fcvt-primary dark:text-fcvt-accent`} aria-hidden="true" />
+              <span className="flex-1 text-left">{t("nav.temaCorto")}</span>
+              <span className="text-xs font-bold text-fcvt-gray">{dark ? t("nav.oscuro") : t("nav.claro")}</span>
+            </button>
+            <button
+              type="button"
+              onClick={toggleLang}
+              aria-label={t("nav.idioma")}
+              title={t("nav.idioma")}
+              className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-fcvt-dark transition hover:bg-fcvt-lighter dark:text-fcvt-dark dark:hover:bg-white/5"
+            >
+              <i className="fa-solid fa-globe w-4 shrink-0 text-center text-sm text-fcvt-primary dark:text-fcvt-accent" aria-hidden="true" />
+              <span className="flex-1 text-left">{t("nav.idioma")}</span>
+              <span className="text-xs font-bold text-fcvt-gray">{lang === "es" ? "ES" : "EN"}</span>
+            </button>
+          </div>
 
           <div className="border-t border-fcvt-lighter p-3 dark:border-white/10">
             <span title={t("nav.proximamente")} className="block">
