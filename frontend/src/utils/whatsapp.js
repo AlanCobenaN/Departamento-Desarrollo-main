@@ -9,9 +9,15 @@ import site from "../config/branding.js";
  *
  * El número es un relleno (000000000), así que el enlace abre WhatsApp pero no
  * llega a escribir a nadie. Cuando haya uno real se cambia branding.js.
+ *
+ * El segundo parámetro existe para el panel de administración: allí el número
+ * se está editando y todavía no está en la configuración, así que se lo pasa
+ * para poder enseñar el enlace tal como quedaría. Si cambia la forma de la
+ * URL, cambia en los dos sitios porque la construcción vive aquí y no
+ * duplicada en el panel.
  */
-export function waLink(text) {
-  return `https://wa.me/${site.contact.whatsapp}?text=${encodeURIComponent(text)}`;
+export function waLink(text, numero = site.contact.whatsapp) {
+  return `https://wa.me/${numero}?text=${encodeURIComponent(text)}`;
 }
 
 /** El número tal cual, para mostrarlo o para saber si sigue siendo el relleno. */

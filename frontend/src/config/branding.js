@@ -252,9 +252,10 @@ export const translations = {
       errorCorreo: "Escribe un correo institucional (@live.uleam.edu.ec o @uleam.edu.ec).",
       errorContrasena: "La contraseña necesita al menos 8 caracteres.",
       errorCampos: "Rellena el correo y la contraseña.",
-      avisoTitulo: "El acceso todavía no está disponible",
-      avisoDetalle:
-        "Estamos terminando el panel de administración. Esta página es el aspecto que tendrá, pero aún no deja entrar a nadie.",
+      errorCredenciales: "El correo o la contraseña no coinciden.",
+      cuentaPrototipo: "Cuenta del prototipo",
+      avisoPrototipo:
+        "Es un acceso de prueba, abierto a propósito y sin contraseña real. Cuando haya autenticación de verdad, esto desaparece.",
     },
     a11y: {
       title: "Opciones de accesibilidad",
@@ -433,9 +434,10 @@ export const translations = {
       errorCorreo: "Enter an institutional email (@live.uleam.edu.ec or @uleam.edu.ec).",
       errorContrasena: "The password needs at least 8 characters.",
       errorCampos: "Fill in your email and password.",
-      avisoTitulo: "Access is not available yet",
-      avisoDetalle:
-        "We are finishing the admin panel. This page shows how it will look, but it does not let anyone in yet.",
+      errorCredenciales: "The email or the password do not match.",
+      cuentaPrototipo: "Prototype account",
+      avisoPrototipo:
+        "This is a test access, deliberately left open and with no real password. Once there is real authentication, this goes away.",
     },
     a11y: {
       title: "Accessibility options",

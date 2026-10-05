@@ -1,36 +1,22 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { useSite } from "../contexts/SiteContext.jsx";
 import site from "../config/branding.js";
+import { EMAIL_RE } from "../utils/correo.js";
+import { CUENTA_PROTOTIPO, buscarCuenta, leer } from "../panel/almacen.js";
 
-// El correo institucional de la ULEAM llega en dos formas:
-//   - @live.uleam.edu.ec, que es el correo de la universidad y el habitual;
-//   - @uleam.edu.ec, que tambien se usa y se acepta.
-// Se validan solo esos dos dominios, no cualquier correo: un formulario que
-// acepta gmail.com no es un formulario de acceso institucional.
-const DOMINIOS = ["live.uleam.edu.ec", "uleam.edu.ec"];
-const EMAIL_RE = new RegExp(`^[^\\s@]+@(${DOMINIOS.map((d) => d.replace(/\./g, "\\.")).join("|")})$`, "i");
 const MIN_PASSWORD = 8;
 const RECORDAR_KEY = "fcvt-login-email";
 
-/**
- * Vista a la que se entra al enviar el formulario.
- *
- * Todavia no esta decidida: falta confirmar cual es. Se deja en una sola
- * constante para que cuando se sepa sea cambiar esta linea y nada mas, sin
- * tocar el formulario.
- *
- * Mientras valga null, enviar enseña el aviso de "el acceso todavia no esta
- * disponible" en vez de saltar a una pagina que todavia no existe.
- */
-const SIGUIENTE_VISTA = null;
+/** Vista a la que se entra al enviar el formulario: el panel de administracion. */
+const SIGUIENTE_VISTA = `${import.meta.env.BASE_URL}panel-de/`;
 
 /**
  * Pagina de acceso, en su propia ruta y con su propia carga de pagina.
  *
- * Por ahora no deja entrar a nadie: no hay backend de autenticacion, asi que
- * enviar el formulario enseña un aviso en lugar de fingir un inicio de sesion
- * que no ocurre. El formulario si valida en el navegador, que es la parte que
- * se puede comprobar de verdad.
+ * Por ahora solo deja pasar a la cuenta del prototipo, que es la unica que
+ * existe: no hay backend de autenticacion, asi que el envio no abre ninguna
+ * sesion real, solo salta al panel. El formulario si valida en el navegador,
+ * que es la parte que se puede comprobar de verdad.
  */
 export default function Login() {
   const { t, lang, toggleLang, dark, toggleTheme } = useSite();
@@ -53,18 +39,18 @@ export default function Login() {
     }
   });
   const [errores, setErrores] = useState({});
-  const [aviso, setAviso] = useState(false);
+  const [errorCred, setErrorCred] = useState(false);
 
   const idEmail = useId();
   const idPassword = useId();
   const emailRef = useRef(null);
-  const avisoRef = useRef(null);
+  const errorRef = useRef(null);
 
-  // El aviso aparece al enviar; mover el foco aqui hace que se lea en voz alta
+  // El error aparece al enviar; mover el foco aqui hace que se lea en voz alta
   // en vez de quedarse en un rincon que el lector de pantalla no recorre.
   useEffect(() => {
-    if (aviso) avisoRef.current?.focus();
-  }, [aviso]);
+    if (errorCred) errorRef.current?.focus();
+  }, [errorCred]);
 
   function validar() {
     const fallos = {};
@@ -85,13 +71,23 @@ export default function Login() {
 
   function onSubmit(evento) {
     evento.preventDefault();
-    setAviso(false);
+    setErrorCred(false);
 
     const fallos = validar();
     setErrores(fallos);
 
     if (Object.keys(fallos).length > 0) {
       if (fallos.email) emailRef.current?.focus();
+      return;
+    }
+
+    // Se comprueba contra la lista de correos con permiso (guardada en el panel).
+    // Si no hay nada guardado, se usa la cuenta del prototipo.
+    const permisos = leer()?.permisos;
+    const cuenta = buscarCuenta(email, permisos);
+    if (!cuenta || cuenta.contrasena !== password) {
+      setErrorCred(true);
+      emailRef.current?.focus();
       return;
     }
 
@@ -104,19 +100,14 @@ export default function Login() {
 
     // El boton y el Enter hacen lo mismo: es el <form> el que decide, asi que
     // no hay atajo por teclado que se quede sin sincronizar con el raton.
-    if (SIGUIENTE_VISTA) {
-      window.location.assign(SIGUIENTE_VISTA);
-      return;
-    }
-
-    setAviso(true);
+    window.location.assign(SIGUIENTE_VISTA);
   }
 
   // En cuanto se toca un campo se va el error de ese campo: repetir el mensaje
   // mientras se escribe solo molesta.
   function limpiarError(campo) {
     setErrores((prev) => (prev[campo] ? { ...prev, [campo]: undefined } : prev));
-    setAviso(false);
+    setErrorCred(false);
   }
 
   const volverA = import.meta.env.BASE_URL;
@@ -336,26 +327,48 @@ export default function Login() {
               </button>
             </form>
 
-            {/* Aviso de acceso no disponible */}
-            {aviso && (
+            {/* Credenciales incorrectas */}
+            {errorCred && (
               <div
-                ref={avisoRef}
+                ref={errorRef}
                 tabIndex={-1}
-                role="status"
-                className="mt-6 rounded-xl border border-fcvt-primary/25 bg-fcvt-primary/5 p-4 text-center outline-none dark:border-fcvt-primary-dark/40 dark:bg-fcvt-primary-dark/15"
+                role="alert"
+                className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-center outline-none dark:border-red-500/30 dark:bg-red-950/30"
               >
                 <i
-                  className="fa-solid fa-circle-info text-lg text-fcvt-primary dark:text-fcvt-primary-light"
+                  className="fa-solid fa-circle-exclamation text-lg text-red-600 dark:text-red-400"
                   aria-hidden="true"
                 />
-                <p className="mt-2 text-sm font-bold text-fcvt-primary dark:text-fcvt-primary-light">
-                  {t("login.avisoTitulo")}
-                </p>
-                <p className="mt-1 text-xs leading-relaxed text-fcvt-gray dark:text-fcvt-gray">
-                  {t("login.avisoDetalle")}
+                <p className="mt-2 text-sm font-bold text-red-700 dark:text-red-300">
+                  {t("login.errorCredenciales")}
                 </p>
               </div>
             )}
+
+            {/* Cuenta del prototipo. Se enseña porque sin ella no hay forma de
+                entrar; es el unico acceso que existe por ahora. */}
+            <div className="mt-6 rounded-xl border border-fcvt-lighter bg-fcvt-light p-4 dark:border-white/10 dark:bg-white/5">
+              <p className="text-xs font-bold uppercase tracking-wider text-fcvt-gray">
+                {t("login.cuentaPrototipo")}
+              </p>
+              <dl className="mt-2 space-y-1 text-xs text-fcvt-gray">
+                <div className="flex gap-2">
+                  <dt className="font-bold text-fcvt-dark dark:text-fcvt-dark">
+                    {t("login.correo")}
+                  </dt>
+                  <dd className="font-mono">{CUENTA_PROTOTIPO.correo}</dd>
+                </div>
+                <div className="flex gap-2">
+                  <dt className="font-bold text-fcvt-dark dark:text-fcvt-dark">
+                    {t("login.contrasena")}
+                  </dt>
+                  <dd className="font-mono">{CUENTA_PROTOTIPO.contrasena}</dd>
+                </div>
+              </dl>
+              <p className="mt-2 text-[11px] leading-relaxed text-fcvt-gray">
+                {t("login.avisoPrototipo")}
+              </p>
+            </div>
           </div>
 
           {/* Volver */}

@@ -1,29 +1,36 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import site from "../config/branding.js";
 import { useSite } from "../contexts/SiteContext.jsx";
+import { useContenido } from "../content/ContenidoContext.jsx";
 import Reveal from "./Reveal.jsx";
 
-/**
- * Galeria visual con visor ampliado (lightbox).
- * Accesible: se cierra con Esc, navega con las flechas y devuelve el foco
- * a la miniatura que la abrio.
- */
 export default function Gallery({ projects = [] }) {
   const { t } = useSite();
+  const contenido = useContenido();
   const [index, setIndex] = useState(null);
 
-  const items = [
-    ...site.screens.map((s) => ({
-      id: s.file,
-      src: s.file,
-      title: t(s.key),
-    })),
-    ...projects.map((p) => ({
-      id: `proyecto-${p.id}`,
-      src: p.cover,
-      title: p.nombre,
-    })),
-  ];
+  const items = useMemo(() => {
+    const guardados = contenido?.galeria;
+    if (Array.isArray(guardados) && guardados.length > 0) {
+      return guardados.map((g, i) => ({
+        id: `panel-galeria-${i}`,
+        src: g.foto && g.foto.trim() ? g.foto.trim() : site.screens[0]?.file,
+        title: g.titulo,
+      }));
+    }
+    return [
+      ...site.screens.map((s) => ({
+        id: s.file,
+        src: s.file,
+        title: t(s.key),
+      })),
+      ...projects.map((p) => ({
+        id: `proyecto-${p.id}`,
+        src: p.cover,
+        title: p.nombre,
+      })),
+    ];
+  }, [contenido, projects, t]);
 
   const open = index !== null;
   const close = useCallback(() => setIndex(null), []);
@@ -55,120 +62,91 @@ export default function Gallery({ projects = [] }) {
   return (
     <section
       id="galeria"
-      className="border-t border-fcvt-lighter bg-fcvt-lighter/40 py-16 sm:py-20 dark:border-white/10 dark:bg-white/[0.02]"
+      className="border-t border-fcvt-lighter bg-fcvt-lighter/40 py-16 sm:py-20 dark:border-white/10 dark:bg-fcvt-darker/60"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <Reveal className="max-w-2xl">
-          <span className="text-xs font-bold uppercase tracking-wider text-fcvt-accent">
-            {t("gallery.title")}
-          </span>
-          <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-fcvt-dark sm:text-4xl">
-            {t("gallery.subtitle")}
-          </h2>
+        <Reveal>
+          <div className="mx-auto max-w-2xl text-center">
+            <span className="text-xs font-bold uppercase tracking-wider text-fcvt-accent">
+              {t("gallery.eyebrow")}
+            </span>
+            <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-fcvt-dark sm:text-4xl">
+              {t("gallery.title")}
+            </h2>
+            <p className="mt-3 text-base text-fcvt-gray">{t("gallery.subtitle")}</p>
+          </div>
         </Reveal>
 
-        <ul className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
-          {items.map((item, i) => (
-            <Reveal as="li" key={item.id} delay={Math.min(i, 7) * 60}>
-              <button
-                type="button"
-                onClick={() => setIndex(i)}
-                className="group relative block w-full overflow-hidden rounded-lg bg-fcvt-darker ring-1 ring-fcvt-lighter transition hover:ring-2 hover:ring-fcvt-accent dark:ring-white/10"
-                aria-label={`${t("gallery.title")}: ${item.title}`}
-              >
-                <img
-                  src={item.src}
-                  alt={item.title}
-                  loading="lazy"
-                  decoding="async"
-                  className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <span className="absolute inset-0 flex items-center justify-center bg-fcvt-darker/0 opacity-0 transition group-hover:bg-fcvt-darker/40 group-hover:opacity-100">
-                  <i className="fa-solid fa-expand text-white" aria-hidden="true" />
-                </span>
-              </button>
-            </Reveal>
-          ))}
-        </ul>
+        {items.length === 0 ? (
+          <p className="mt-10 text-center text-sm text-fcvt-gray">{t("gallery.empty")}</p>
+        ) : (
+          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {items.map((img, i) => (
+              <Reveal key={img.id} delay={80 + i * 40}>
+                <button
+                  type="button"
+                  onClick={() => setIndex(i)}
+                  className="group aspect-[16/10] w-full overflow-hidden rounded-xl ring-1 ring-fcvt-lighter shadow-sm transition hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-fcvt-primary dark:ring-white/10"
+                >
+                  <img
+                    src={img.src}
+                    alt={img.title}
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                    loading="lazy"
+                  />
+                </button>
+              </Reveal>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* ---------- Lightbox ---------- */}
       {open && (
         <div
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/90 px-4 py-6"
           role="dialog"
           aria-modal="true"
-          aria-label={t("gallery.title")}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4"
+          aria-label={t("gallery.viewer")}
           onClick={close}
         >
-          <button
-            type="button"
-            onClick={close}
-            className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
-            aria-label={t("gallery.cerrar")}
-          >
-            <i className="fa-solid fa-xmark" aria-hidden="true" />
-          </button>
-
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              prev();
-            }}
-            className="absolute left-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
-            aria-label={t("gallery.anterior")}
-          >
-            <i className="fa-solid fa-chevron-left" aria-hidden="true" />
-          </button>
-
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              next();
-            }}
-            className="absolute right-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
-            aria-label={t("gallery.siguiente")}
-          >
-            <i className="fa-solid fa-chevron-right" aria-hidden="true" />
-          </button>
-
-          <figure
-            className="max-h-full w-full max-w-3xl"
+          <div
+            className="relative flex max-h-[90vh] max-w-6xl flex-col items-center"
             onClick={(e) => e.stopPropagation()}
           >
             <img
               src={items[index].src}
               alt={items[index].title}
-              className="mx-auto max-h-[75vh] w-auto rounded-lg object-contain"
+              className="max-h-[80vh] max-w-[90vw] object-contain rounded-lg shadow-2xl"
             />
-            <figcaption className="mt-4 text-center">
-              <p className="font-semibold text-white">{items[index].title}</p>
-              <p className="mt-1 text-xs text-white/60">{t("gallery.ayuda")}</p>
-            </figcaption>
-            {/* Indicadores de posición (rallitas) */}
-            <div className="mt-4 flex items-center justify-center gap-2" role="tablist" aria-label="Imagenes">
-              {items.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  role="tab"
-                  aria-selected={i === index}
-                  aria-label={`Imagen ${i + 1}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIndex(i);
-                  }}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    i === index
-                      ? "w-6 bg-white"
-                      : "w-2 bg-white/40 hover:bg-white/60"
-                  }`}
-                />
-              ))}
+            <div className="mt-4 max-w-4xl text-center text-sm text-white/90">
+              {items[index].title}
             </div>
-          </figure>
+
+            <button
+              type="button"
+              onClick={prev}
+              className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:left-4 sm:p-3"
+              aria-label={t("gallery.prev")}
+            >
+              <i className="fa-solid fa-chevron-left" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              onClick={next}
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:right-4 sm:p-3"
+              aria-label={t("gallery.next")}
+            >
+              <i className="fa-solid fa-chevron-right" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              onClick={close}
+              className="absolute right-2 top-2 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:right-4 sm:top-4 sm:p-3"
+              aria-label={t("gallery.close")}
+            >
+              <i className="fa-solid fa-xmark" aria-hidden="true" />
+            </button>
+          </div>
         </div>
       )}
     </section>

@@ -13,13 +13,15 @@ export default defineConfig({
 
   build: {
     rollupOptions: {
-      // Dos paginas y dos entradas. El acceso va en login/index.html y no en
-      // una ruta de React porque en GitHub Pages una carpeta es una ruta de
-      // verdad: /login/ se sirve sin ningun truco, mientras que una ruta de
-      // router que no exista en disco daria 404 al recargarla o al compartirla.
+      // Tres paginas y tres entradas. El acceso y el panel van en login/ y
+      // panel-de/ y no en rutas de React porque en GitHub Pages una carpeta
+      // es una ruta de verdad: /login/ se sirve sin ningun truco, mientras que
+      // una ruta de router que no exista en disco daria 404 al recargarla o
+      // al compartirla.
       input: {
         main: fileURLToPath(new URL("./index.html", import.meta.url)),
         login: fileURLToPath(new URL("./login/index.html", import.meta.url)),
+        "panel-de": fileURLToPath(new URL("./panel-de/index.html", import.meta.url)),
       },
     },
   },

@@ -9,12 +9,15 @@ import Footer from "./components/Footer.jsx";
 import BackToTop from "./components/BackToTop.jsx";
 import { SiteProvider, useSite } from "./contexts/SiteContext.jsx";
 import { A11yProvider } from "./contexts/AccessibilityContext.jsx";
+import { ContenidoProvider, useContenido } from "./content/ContenidoContext.jsx";
 import { fetchProjects } from "./utils/api.js";
 import { coverForAll } from "./utils/cover.js";
 import { applyProjectLang } from "./utils/i18n.js";
+import { coverFor } from "./utils/cover.js";
 
 function Layout() {
   const { t, lang } = useSite();
+  const contenido = useContenido();
   const [raw, setRaw] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,8 +33,28 @@ function Layout() {
 
   useEffect(load, []);
 
-  // El contenido de los proyectos también cambia de idioma.
-  const projects = useMemo(() => coverForAll(applyProjectLang(raw, lang)), [raw, lang]);
+  const projects = useMemo(() => {
+    const guardados = contenido?.proyectos;
+    if (Array.isArray(guardados) && guardados.length > 0 && lang === "es") {
+      return guardados.map((p, i) => ({
+        id: `panel-${i}`,
+        nombre: p.nombre,
+        resumen: p.descripcion,
+        categoria: p.categoria,
+        tecnologias: Array.isArray(p.tecnologias) ? p.tecnologias : [],
+        cover: p.foto && p.foto.trim() ? p.foto.trim() : coverFor({ nombre: p.nombre, categoria: p.categoria }, i),
+        url: "",
+      }));
+    }
+    if (raw.length === 0 && !(Array.isArray(guardados) && guardados.length > 0)) {
+      // keep loading state logic; but if we have overrides loaded? no, overrides come from contexto
+    }
+    return coverForAll(applyProjectLang(raw, lang));
+  }, [contenido, raw, lang]);
+
+  const isFromOverrides = contenido?.proyectos?.length > 0 && lang === "es";
+  const projLoading = isFromOverrides ? false : loading;
+  const projError = isFromOverrides ? null : error;
 
   return (
     <div className="flex min-h-screen flex-col bg-fcvt-light text-fcvt-dark dark:bg-fcvt-darker dark:text-fcvt-dark">
@@ -42,15 +65,15 @@ function Layout() {
       <Navbar />
 
       <main id="contenido" className="flex-1">
-        <Hero projectCount={loading ? 0 : projects.length} />
+        <Hero projectCount={projLoading ? 0 : projects.length} />
         <Services />
         <Projects
           projects={projects}
-          loading={loading}
-          error={error}
-          onRetry={error ? load : undefined}
+          loading={projLoading}
+          error={projError}
+          onRetry={error && !isFromOverrides ? load : undefined}
         />
-        {!loading && !error && <Gallery projects={projects} />}
+        {projects.length > 0 && <Gallery projects={projects} />}
         <WhatsappForm />
       </main>
 
@@ -64,7 +87,9 @@ export default function App() {
   return (
     <A11yProvider>
       <SiteProvider>
-        <Layout />
+        <ContenidoProvider>
+          <Layout />
+        </ContenidoProvider>
       </SiteProvider>
     </A11yProvider>
   );

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Panel del sitio · Departamento de Desarrollo</title>
+    <meta
+      name="description"
+      content="Prototipo del panel de administración del sitio: edición de servicios, tecnologías, proyectos, galería, contacto y pie de página."
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#034B88" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1A4265" media="(prefers-color-scheme: dark)" />
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+    />
+
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script>
+      // Mismo script anti-destello que ../index.html y ../login/index.html.
+      // El panel es una tercera carga de pagina y sin esto entraria con un
+      // fogonazo claro cuando el visitante ya tiene el tema oscuro puesto.
+      (function () {
+        var root = document.documentElement;
+        try {
+          var theme = localStorage.getItem("fcvt-theme");
+          if (theme !== "dark" && theme !== "light") {
+            theme =
+              window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+          }
+          if (theme === "dark") root.classList.add("dark");
+          root.style.colorScheme = theme;
+
+          var lang = localStorage.getItem("fcvt-lang");
+          root.lang = lang === "en" ? "en" : "es";
+
+          var a11y = JSON.parse(localStorage.getItem("fcvt-a11y") || "{}");
+          var ATTR = {
+            textSize: "text-size",
+            contrast: "contrast",
+            lineHeight: "line-height",
+            grayscale: "grayscale",
+            dyslexia: "dyslexia",
+            underlineLinks: "underline-links",
+            reduceMotion: "reduce-motion",
+            bigCursor: "big-cursor",
+          };
+          var DEFAULTS = {
+            textSize: "normal",
+            contrast: "normal",
+            lineHeight: "normal",
+            grayscale: false,
+            dyslexia: false,
+            underlineLinks: false,
+            reduceMotion: false,
+            bigCursor: false,
+          };
+          for (var name in ATTR) {
+            var value = a11y[name];
+            if (value === undefined || value === DEFAULTS[name]) continue;
+            root.setAttribute(
+              "data-" + ATTR[name],
+              typeof value === "boolean" ? "true" : String(value),
+            );
+          }
+        } catch (e) {
+          // Con las cookies bloqueadas se sigue con los valores por defecto.
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/panel-main.jsx"></script>
+  </body>
+</html>
