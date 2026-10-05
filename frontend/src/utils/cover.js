@@ -1,5 +1,5 @@
 ﻿// Portadas generadas (SVG inline) para los proyectos que no traen imagen propia.
-// Usan la paleta institucional ULEAM para mantener coherencia visual y así
+// Usan la paleta institucional para mantener coherencia visual y así
 // reducir ruido visual: mismo estilo, solo cambia el color y el monograma.
 //
 // Estos pares viven aquí y no en index.css porque el SVG se hornea como
@@ -7,6 +7,8 @@
 // Si se cambia la paleta hay que actualizar esta lista a mano.
 // Todos los stops son azules reales extraídos del logo "logo_40_años"
 // (azules de 18% a 37% de luminosidad, tono 207-210°).
+import site from "../config/branding.js";
+
 const PALETTE = [
   ["#015394", "#053068"],
   ["#034B88", "#0B2F54"],
@@ -70,7 +72,7 @@ export function coverFor(project = {}, index = 0) {
     (categoria
       ? `<text x="36" y="226" font-family="Arial,Helvetica,sans-serif" font-size="14" letter-spacing="2" fill="rgba(${ACCENT_TEXT},0.95)">${categoria.toUpperCase()}</text>`
       : "") +
-    `<text x="36" y="374" font-family="Arial,Helvetica,sans-serif" font-size="14" letter-spacing="3" fill="rgba(255,255,255,0.65)">Facultad de Ciencias de la Vida y Tecnologías</text>` +
+    `<text x="36" y="374" font-family="Arial,Helvetica,sans-serif" font-size="14" letter-spacing="3" fill="rgba(255,255,255,0.65)">${escapeXml(site.faculty)}</text>` +
     `</svg>`;
 
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;

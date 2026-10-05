@@ -1,9 +1,28 @@
-﻿# Sitio FCVT
+﻿# Sitio del Departamento de Desarrollo
 
-Web del equipo interno de desarrollo de la Facultad de Ciencias de la Vida y
-Tecnologías (FCVT) de la ULEAM.
+Web del equipo de desarrollo del Departamento de Desarrollo de Estudios y
+Construcciones ULEAM-EP.
 
 React y Vite en el navegador, PHP detrás, PostgreSQL guardando.
+
+## Qué hay aquí
+
+```
+frontend/               el sitio
+  src/components/       cada sección es un componente: Navbar, Hero, Projects,
+                        Gallery, WhatsappForm, Footer...
+  src/config/branding.js  nombre, textos ES/EN y datos de contacto
+  src/contexts/         tema, idioma y los ajustes de accesibilidad
+  src/utils/            llamada a la API, portadas SVG, textos de los proyectos
+  login/                página de acceso, con su propia entrada de build
+api/                    la API en PHP
+  public/index.php      punto de entrada y rutas
+  src/                  Controllers, Services, Repositories
+  database/             schema.sql, seed.sql, migrate.php, export.php
+```
+
+Casi todo lo que se toca a menudo está en `frontend/src/config/branding.js`:
+textos, nombre del sitio y número de WhatsApp.
 
 ## Requisitos
 
@@ -19,9 +38,9 @@ npm run inicio
 
 Queda en http://localhost:5173 y la API en http://localhost:8000/api.
 
-`inicio.mjs` revisa que estén las tres herramientas, crea los `.env` que
-falten a partir de los `.env.example`, avisa si un puerto ya está ocupado y
-levanta frontend y API con las salidas etiquetadas.
+`inicio.mjs` avisa si falta alguna de las tres herramientas, crea los `.env`
+que falten a partir de los `.env.example` y levanta frontend y API con las
+salidas etiquetadas.
 
 PostgreSQL tiene que estar arrancado antes. Si no lo está:
 
@@ -54,7 +73,7 @@ php api/database/migrate.php --seed
 Sin `--seed` solo aplica el esquema. **El seed borra la tabla `proyectos`
 antes de insertar**, así que no lo ejecutes en producción.
 
-Va por PDO y usa el mismo `api/.env` que la API, así que carga exactamente lo
+Va por PDO y lee el mismo `api/.env` que la API, así que carga exactamente lo
 que leerá el sitio.
 
 ## API
@@ -65,21 +84,11 @@ que leerá el sitio.
 | `GET /api/projects` | Catálogo completo, en `{ ok, data }` |
 | `GET /api/projects/{id}` | Un proyecto, o 404 en `{ ok: false, error: { message } }` |
 
-Los proyectos salen de PostgreSQL. No hay copia escrita a mano en el código:
-si la API no responde, el sitio cae a `frontend/public/catalogo.json`, una foto
-del catálogo exportada de la base.
-
-## La foto del catálogo
-
-Es lo que permite publicar el sitio antes de tener la API alojada en algún
-sitio. Cuando la API esté desplegada, manda ella y la foto deja de usarse.
-
-Es una foto y no una copia viva, así que **después de cambiar algo en la base
-hay que regenerarla**:
-
-```bash
-npm run catalogo
-```
+Los proyectos salen de PostgreSQL. Si la API no responde, el sitio cae a
+`frontend/public/catalogo.json`, que es una foto del catálogo exportada de la
+base. Esa foto es lo que permite publicar el sitio sin la API alojada, pero es
+una foto: **después de cambiar algo en la base hay que regenerarla** con
+`npm run catalogo`.
 
 ## Despliegue
 

@@ -4,6 +4,7 @@ import Hero from "./components/Hero.jsx";
 import Services from "./components/Services.jsx";
 import Projects from "./components/Projects.jsx";
 import Gallery from "./components/Gallery.jsx";
+import WhatsappForm from "./components/WhatsappForm.jsx";
 import Footer from "./components/Footer.jsx";
 import BackToTop from "./components/BackToTop.jsx";
 import { SiteProvider, useSite } from "./contexts/SiteContext.jsx";
@@ -50,6 +51,7 @@ function Layout() {
           onRetry={error ? load : undefined}
         />
         {!loading && !error && <Gallery projects={projects} />}
+        <WhatsappForm />
       </main>
 
       <Footer />

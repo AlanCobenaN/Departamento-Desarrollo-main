@@ -1,5 +1,6 @@
 ﻿/**
- * Identidad del sitio — inspirada en el tema "Academi" del Aula Virtual ULEAM.
+ * Identidad del sitio — inspirada en el tema "Academi" del aula virtual de la
+ * institución.
  * Colores de marca extraídos del logo "logo_40_años": azul institucional
  * #034B88 (tono 207°) y dorado #DCB469 (tono 37°).
  */
@@ -18,11 +19,10 @@
 const asset = (ruta) => `${import.meta.env.BASE_URL}${ruta.replace(/^\//, "")}`;
 
 const site = {
-  name: "Equipo de Desarrollo FCVT",
-  shortName: "FCVT",
-  faculty: "Facultad de Ciencias de la Vida y Tecnologías",
-  university: "Universidad Laica Eloy Alfaro de Manabí",
-  initials: "ULEAM",
+  name: "Equipo de Desarrollo de Soluciones Tecnológicas",
+  faculty: "Departamento de Desarrollo",
+  university: "Estudios y Construcciones ULEAM-EP",
+  initials: "ULEAM-EP",
   city: "Manta, Manabí, Ecuador",
   slogan: "Ciencia y tecnología al servicio de la vida",
 
@@ -53,6 +53,15 @@ const site = {
   contact: {
     email: "correo@ejemplo.com",
     phone: "+000 000-0000",
+
+    // Numero de WhatsApp para el formulario de contacto. Solo digitos y con el
+    // prefijo del pais, que es lo que exige wa.me (Ecuador seria 593 9XX XXX
+    // XXX). Sin el +, sin espacios y sin guiones.
+    //
+    // De momento es un relleno DELIBERADO: 000000000 no es un numero real, asi
+    // que el formulario abre WhatsApp pero no puede escribirle a ningun
+    // desconocido. Al fijar el numero real basta cambiar esta linea.
+    whatsapp: "000000000",
   },
 
   pages: [
@@ -151,7 +160,8 @@ export const translations = {
     },
     projects: {
       title: "Proyectos en desarrollo",
-      subtitle: "Herramientas que construimos para la comunidad ULEAM.",
+      subtitle:
+        "Herramientas que construimos para la comunidad de Estudios y Construcciones ULEAM-EP.",
       buscar: "Buscar proyecto",
       placeholder: "Buscar por nombre o tecnología…",
       filtro: "Filtrar por categoría",
@@ -186,6 +196,43 @@ export const translations = {
       contactTitle: "Contacto",
       follow: "Síguenos",
       placeholders: "Datos de ejemplo para el prototipo.",
+    },
+    whatsapp: {
+      eyebrow: "¿Necesitas algo?",
+      title: "Escríbenos por WhatsApp",
+      subtitle:
+        "Cuéntanos qué necesitas y te respondemos por el mismo canal. Sin registros ni contraseñas.",
+      sinRegistro: "Sin registro ni contraseña de por medio",
+      sinCorreo: "El mensaje llega directo a nuestro WhatsApp",
+      directo: "Tú decides si lo envías o no",
+      // Saludo que lleva el enlace de WhatsApp del menú de navegación, que no
+      // pasa por el formulario y por tanto no tiene ningún campo que poner.
+      saludo: "Hola, equipo. Escribo desde la página web.",
+      nombre: "Nombre",
+      nombrePlaceholder: "¿Cómo te llamas?",
+      motivo: "Motivo",
+      motivoPlaceholder: "Elige un motivo",
+      motivos: {
+        proyecto: "Un proyecto nuevo",
+        soporte: "Soporte técnico",
+        otro: "Otro asunto",
+      },
+      mensaje: "Mensaje",
+      mensajePlaceholder: "Escribe tu consulta…",
+      enviar: "Enviar por WhatsApp",
+      // Un texto de arranque por motivo, no una plantilla única con el motivo
+      // metido en medio: "Escribo por un proyecto nuevo" se lee mucho mejor que
+      // una linea de "Motivo:". Los {entre llaves} los sustituye el componente.
+      textos: {
+        proyecto:
+          "Hola, soy {nombre}. Me gustaría hablar sobre un proyecto para el departamento.\n\n{mensaje}",
+        soporte:
+          "Hola, soy {nombre}. Necesito ayuda con un tema de soporte técnico.\n\n{mensaje}",
+        otro: "Hola, soy {nombre}. Quería consultarles sobre otro asunto.\n\n{mensaje}",
+      },
+      enviado: "Abrimos WhatsApp en una pestaña nueva con tu mensaje.",
+      aviso:
+        "Todavía no hay un número configurado, así que el enlace no llega a nadie.",
     },
     backToTop: "Volver arriba",
 
@@ -301,7 +348,7 @@ export const translations = {
     },
     projects: {
       title: "Projects in development",
-      subtitle: "Tools we build for the ULEAM community.",
+      subtitle: "Tools we build for the Estudios y Construcciones ULEAM-EP community.",
       buscar: "Search projects",
       placeholder: "Search by name or technology…",
       filtro: "Filter by category",
@@ -336,6 +383,37 @@ export const translations = {
       contactTitle: "Contact",
       follow: "Follow us",
       placeholders: "Sample data for the prototype.",
+    },
+    whatsapp: {
+      eyebrow: "Do you need something?",
+      title: "Message us on WhatsApp",
+      subtitle:
+        "Tell us what you need and we will reply on the same channel. No sign-up, no passwords.",
+      sinRegistro: "No sign-up and no password involved",
+      sinCorreo: "The message goes straight to our WhatsApp",
+      directo: "You decide whether to send it or not",
+      saludo: "Hi team. I'm writing from the website.",
+      nombre: "Name",
+      nombrePlaceholder: "What is your name?",
+      motivo: "Topic",
+      motivoPlaceholder: "Pick a topic",
+      motivos: {
+        proyecto: "A new project",
+        soporte: "Technical support",
+        otro: "Something else",
+      },
+      mensaje: "Message",
+      mensajePlaceholder: "Write your question…",
+      enviar: "Send via WhatsApp",
+      textos: {
+        proyecto:
+          "Hi, I'm {nombre}. I would like to talk about a project for the department.\n\n{mensaje}",
+        soporte: "Hi, I'm {nombre}. I need help with a technical support issue.\n\n{mensaje}",
+        otro: "Hi, I'm {nombre}. I wanted to ask you about something else.\n\n{mensaje}",
+      },
+      enviado: "We opened WhatsApp in a new tab with your message.",
+      aviso:
+        "There is no number configured yet, so the link does not reach anyone.",
     },
     backToTop: "Back to top",
 

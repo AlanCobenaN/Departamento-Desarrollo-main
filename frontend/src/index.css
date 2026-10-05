@@ -3,7 +3,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ============================================================
-   Tokens de diseño — tema Academi ULEAM
+   Tokens de diseño — tema Academi
    Paleta extraída del logo "logo_40_años": azul institucional en
    tono 207° y dorado en tono 37°. El blanco y sus derivados del
    logo quedaron excluidos a propósito.
@@ -42,6 +42,13 @@
   --color-fcvt-light: #F5F7FB;
   --color-fcvt-lighter: #E4EAF4;
   --color-fcvt-white: #ffffff;
+
+  /* El dorado de acento en tripletas RGB, para poder usarlo con rgba() donde
+     hace falta un color con transparencia (el halo del boton principal, por
+     ejemplo). Vive fuera de @theme a proposito: no es un color de la paleta
+     sino una forma de escribir el mismo, y asi el modo sin color puede
+     remapearlo igual que a los demas. */
+  --fcvt-accent-rgb: 220, 180, 105;
 }
 
 /* ---------- Modo oscuro ----------
@@ -79,21 +86,21 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  /* Tipografía del cuerpo: una humanista de sistema, de lectura más abierta
-     que la por defecto de Tailwind. El navbar queda fuera con su propio
-     bloque de abajo. */
-  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
-    sans-serif;
+  /* Montserrat en todo el sitio. Las alternativas son de sistema y solo entran
+     si el CDN de Google Fonts no carga: antes se preferia -apple-system, que
+     en Windows resolvia a Segoe UI, que es como se venia viendo el sitio. */
+  font-family: "Montserrat", "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    "Noto Sans", sans-serif;
 }
 
-/* El navbar conserva la tipografía original del tema (system-ui).
+/* El navbar declara su propia tipografía para no heredar la del cuerpo.
    El selector universal alcanza también a los <i> de Font Awesome, y al
    declararles font-family se les cae el glifo y salen como cuadraditos.
    Por eso los iconos quedan fuera con :not(). */
 header.navbar-fcvt,
 header.navbar-fcvt *:not([class*="fa-"]) {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
 }
 
 /* Foco visible y consistente (accesibilidad de teclado).
@@ -196,12 +203,23 @@ html[data-contrast="high"] {
 }
 
 /* --- Modo sin color: escala de grises completa --- */
+/* --- Modo sin color: escala de grises completa ---
+   Los extremos del degradado dorado (accent-from y accent-to) y el rgb del
+   halo dorato tambien se remapean aqui. Sin eso, todos los botones con
+   degradado dorado se quedaban dorados en un sitio que se supone sin color:
+   sus utilities de Tailwind compilan a var(--color-fcvt-accent-from), que es
+   una variable distinta de --color-fcvt-accent, la unica que se remapeaba.
+   Los dos grises del degradado mantienen la misma diferencia de luz que los
+   dos dorados para que el botón no se vea plano. */
 html[data-grayscale="true"] {
   --color-fcvt-primary: #4a4a4a;
   --color-fcvt-primary-dark: #2a2a2a;
   --color-fcvt-primary-light: #6a6a6a;
   --color-fcvt-accent: #8d8d8d;
   --color-fcvt-accent-soft: #e0e0e0;
+  --color-fcvt-accent-from: #b3b3b3;
+  --color-fcvt-accent-to: #8a8a8a;
+  --fcvt-accent-rgb: 138, 138, 138;
   --color-fcvt-dark: #1a1a1a;
   --color-fcvt-darker: #0a0a0a;
   --color-fcvt-gray: #7a7a7a;
@@ -296,19 +314,50 @@ html[data-reduce-motion="true"] .enter {
   transform: none !important;
 }
 
+/* --- Panel del menú de navegación ---
+   Entra y sale deslizándose desde la derecha (translateX) y ocupa toda la
+   altura que queda bajo la barra. Son dos animaciones y no una transición
+   porque el panel aparece en el DOM ya en su estado final: para que se vea
+   la entrada tiene que ir de translateX(100%) a 0, y para que se vea la
+   salida el nodo se queda montado hasta el animationend (ver NavMenu.jsx). */
 .nav-panel {
   transform-origin: top right;
-  animation: nav-drop 0.18s ease;
+  will-change: transform, opacity;
+}
+.nav-panel[data-state="open"] {
+  animation: nav-slide-in 0.28s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+/* El estado de "escondido" va en la regla y no solo en los keyframes porque el
+   ajuste "Eliminar animaciones" aplica `animation: none !important`: si el
+   translateX viviera unicamente en la animación, el panel cerrando se quedaria
+   en pantalla los 500 ms que NavMenu.jsx espera antes de desmontarlo. Con el
+   `both` de la animación mandan los keyframes mientras esta corre, y al anularse
+   la animación mandan estas declaraciones y desaparece al instante. */
+.nav-panel[data-state="closed"] {
+  opacity: 0;
+  transform: translateX(100%);
+  animation: nav-slide-out 0.2s ease-in both;
 }
 
-@keyframes nav-drop {
+@keyframes nav-slide-in {
   from {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateX(100%);
   }
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+@keyframes nav-slide-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
   }
 }
 
@@ -342,15 +391,17 @@ html[data-reduce-motion="true"] .enter {
 }
 
 /* --- Latido suave para el CTA principal ---
-   El halo usa el rgb del dorado de acento (#DCB469) para acompañar al
-   botón, que ya no es azul. */
+   El halo usa el rgb del dorado de acento para acompañar al botón, que ya no
+   es azul. Va por variable y no como rgb fijo para que el modo sin color lo
+   convierta a gris: con el valor fijo el halo se quedaba dorado alrededor de un
+   botón que ya era gris. */
 @keyframes pulse-glow {
   0%,
   100% {
-    box-shadow: 0 10px 25px -8px rgba(220, 180, 105, 0.55);
+    box-shadow: 0 10px 25px -8px rgba(var(--fcvt-accent-rgb), 0.55);
   }
   50% {
-    box-shadow: 0 14px 38px -8px rgba(220, 180, 105, 0.85);
+    box-shadow: 0 14px 38px -8px rgba(var(--fcvt-accent-rgb), 0.85);
   }
 }
 .animate-pulse-glow {
