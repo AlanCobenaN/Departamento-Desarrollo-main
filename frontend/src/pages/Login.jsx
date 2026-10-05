@@ -8,7 +8,7 @@ const MIN_PASSWORD = 8;
 const RECORDAR_KEY = "fcvt-login-email";
 
 /** Vista a la que se entra al enviar el formulario: el panel de administracion. */
-const SIGUIENTE_VISTA = `${import.meta.env.BASE_URL}panel-de/`;
+const SIGUIENTE_VISTA = `${import.meta.env.BASE_URL}panel-de-administrador/`;
 
 /**
  * Pagina de acceso, en su propia ruta y con su propia carga de pagina.

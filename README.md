@@ -16,7 +16,7 @@ frontend/               el sitio
   src/utils/            llamada a la API, portadas SVG, textos de los proyectos
   src/panel/            editores del panel de administración
   login/                página de acceso, con su propia entrada de build
-  panel-de/             panel de administración, con su propia entrada de build
+  panel-de-administrador/  panel de administración, con su propia entrada de build
 api/                    la API en PHP
   public/index.php      punto de entrada y rutas
   src/                  Controllers, Services, Repositories
@@ -28,9 +28,9 @@ textos, nombre del sitio y número de WhatsApp.
 
 ## Acceso y panel
 
-`/login/` y `/panel-de/` son páginas aparte, con su propia entrada de build,
-porque en GitHub Pages una carpeta es una ruta de verdad y una ruta de router
-daría 404 al recargarla.
+`/login/` y `/panel-de-administrador/` son páginas aparte, con su propia entrada
+de build, porque en GitHub Pages una carpeta es una ruta de verdad y una ruta
+de router daría 404 al recargarla.
 
 Ahora mismo el acceso es un **prototipo**: solo pasa la cuenta
 `admin@uleam.edu.ec` / `admin123`, que está escrita en
