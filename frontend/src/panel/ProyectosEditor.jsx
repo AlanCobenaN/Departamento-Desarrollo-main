@@ -63,7 +63,7 @@ export default function ProyectosEditor({ value, onChange }) {
         return {
           ...p,
           tecnologias: dentro
-            ? p.tecnologias.filter((t) => t !== etiqueta)
+            ? p.tecnologias.filter((tec) => tec !== etiqueta)
             : [...p.tecnologias, etiqueta],
         };
       }),
@@ -122,7 +122,7 @@ export default function ProyectosEditor({ value, onChange }) {
         antes && antes !== texto
           ? proyectos.map((p) =>
               p.tecnologias.includes(antes)
-                ? { ...p, tecnologias: p.tecnologias.map((t) => (t === antes ? texto : t)) }
+                ? { ...p, tecnologias: p.tecnologias.map((tec) => (tec === antes ? texto : tec)) }
                 : p,
             )
           : proyectos,
@@ -136,7 +136,7 @@ export default function ProyectosEditor({ value, onChange }) {
       etiquetasTecnologia: etiquetasTecnologia.filter((_, i) => i !== indice),
       proyectos: proyectos.map((p) =>
         p.tecnologias.includes(borrada)
-          ? { ...p, tecnologias: p.tecnologias.filter((t) => t !== borrada) }
+          ? { ...p, tecnologias: p.tecnologias.filter((tec) => tec !== borrada) }
           : p,
       ),
     });
@@ -164,7 +164,9 @@ export default function ProyectosEditor({ value, onChange }) {
             // Etiquetas que el proyecto usa pero que ya no están en la lista.
             // Se avisan en vez de borrarlas solas: puede que la etiqueta se
             // haya borrado sin querer y el dato del proyecto siga siendo bueno.
-            const huerfanas = proyecto.tecnologias.filter((t) => !etiquetasTecnologia.includes(t));
+            const huerfanas = proyecto.tecnologias.filter(
+              (tec) => !etiquetasTecnologia.includes(tec),
+            );
 
             return (
               <li key={proyecto.id}>

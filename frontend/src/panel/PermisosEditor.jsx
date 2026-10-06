@@ -141,6 +141,7 @@ export default function PermisosEditor({ valor = [], onCambiar }) {
           </BotonPrincipal>
         </div>
         <Subtitulo>{t("panel.permisos.advertencia")}</Subtitulo>
+        {/* sufijo pegado a la negrita: ES empieza con espacio, EN con punto */}
         <p className="text-xs text-fcvt-gray">
           {t("panel.permisos.avisoPrefijo")}{" "}
           <strong>{t("panel.permisos.avisoResaltado")}</strong>
