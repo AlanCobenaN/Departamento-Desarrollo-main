@@ -1,3 +1,4 @@
+import { useSite } from "../contexts/SiteContext.jsx";
 import { ICONO_SERVICIO, nuevoId } from "./datos.js";
 import {
   BotonPrincipal,
@@ -16,6 +17,8 @@ import {
  * sitio, que es el comportamiento que se pidió en vez de un hueco vacío.
  */
 export default function ServiciosEditor({ value, onChange }) {
+  const { t } = useSite();
+
   function cambiar(id, campo, nuevo) {
     onChange(value.map((fila) => (fila.id === id ? { ...fila, [campo]: nuevo } : fila)));
   }
@@ -31,17 +34,17 @@ export default function ServiciosEditor({ value, onChange }) {
   return (
     <div className="space-y-5">
       <Tarjeta
-        titulo={`Tarjetas de "Qué hacemos" (${value.length})`}
+        titulo={t("panel.servicios.titulo", { n: value.length })}
         accion={
           <BotonPrincipal onClick={anadir}>
             <i className="fa-solid fa-plus" aria-hidden="true" />
-            Añadir tarjeta
+            {t("panel.servicios.anadir")}
           </BotonPrincipal>
         }
       >
         {value.length === 0 && (
           <p className="text-sm text-fcvt-gray">
-            No hay tarjetas. La sección quedaría vacía en la portada.
+            {t("panel.servicios.vacio")}
           </p>
         )}
 
@@ -50,18 +53,21 @@ export default function ServiciosEditor({ value, onChange }) {
             <li key={fila.id}>
               <Subtitulo
                 accion={
-                  <BotonSecundario onClick={() => quitar(fila.id)} etiqueta={`Borrar la tarjeta ${i + 1}`}>
+                  <BotonSecundario
+                    onClick={() => quitar(fila.id)}
+                    etiqueta={t("panel.servicios.borrarTitulo", { n: i + 1 })}
+                  >
                     <i className="fa-solid fa-trash" aria-hidden="true" />
-                    Borrar
+                    {t("panel.comunes.borrar")}
                   </BotonSecundario>
                 }
               >
-                Tarjeta {i + 1}
+                {t("panel.servicios.fila", { n: i + 1 })}
               </Subtitulo>
 
               <div className="mt-3 grid gap-4 lg:grid-cols-2">
                 <SelectorIcono
-                  etiqueta="Logo"
+                  etiqueta={t("panel.comunes.logo")}
                   valor={fila.icono}
                   onChange={(nuevo) => cambiar(fila.id, "icono", nuevo)}
                   porDefecto={ICONO_SERVICIO}
@@ -69,17 +75,17 @@ export default function ServiciosEditor({ value, onChange }) {
 
                 <div className="space-y-4">
                   <Campo
-                    etiqueta="Título"
+                    etiqueta={t("panel.comunes.titulo")}
                     valor={fila.titulo}
                     onChange={(nuevo) => cambiar(fila.id, "titulo", nuevo)}
-                    placeholder="Desarrollo web"
+                    placeholder={t("panel.servicios.tituloPlaceholder")}
                   />
                   <Campo
-                    etiqueta="Descripción"
+                    etiqueta={t("panel.comunes.descripcion")}
                     multilinea
                     valor={fila.descripcion}
                     onChange={(nuevo) => cambiar(fila.id, "descripcion", nuevo)}
-                    placeholder="Portales, intranets y sistemas de gestión a medida…"
+                    placeholder={t("panel.servicios.descripcionPlaceholder")}
                   />
                 </div>
               </div>

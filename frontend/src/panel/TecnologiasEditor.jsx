@@ -1,3 +1,4 @@
+import { useSite } from "../contexts/SiteContext.jsx";
 import { ICONO_TECNOLOGIA, nuevoId } from "./datos.js";
 import {
   BotonPrincipal,
@@ -16,6 +17,8 @@ import {
  * orden: para reordenarlas hay que borrarlas y volver a añadirlas.
  */
 export default function TecnologiasEditor({ value, onChange }) {
+  const { t } = useSite();
+
   function cambiar(id, campo, nuevo) {
     onChange(value.map((fila) => (fila.id === id ? { ...fila, [campo]: nuevo } : fila)));
   }
@@ -30,17 +33,17 @@ export default function TecnologiasEditor({ value, onChange }) {
 
   return (
     <Tarjeta
-      titulo={`Tecnologías (${value.length})`}
+      titulo={t("panel.tecnologias.titulo", { n: value.length })}
       accion={
         <BotonPrincipal onClick={anadir}>
           <i className="fa-solid fa-plus" aria-hidden="true" />
-          Añadir tecnología
+          {t("panel.tecnologias.anadir")}
         </BotonPrincipal>
       }
     >
       {value.length === 0 && (
         <p className="text-sm text-fcvt-gray">
-          Sin tecnologías el anillo 3D no tiene nada que mostrar.
+          {t("panel.tecnologias.vacio")}
         </p>
       )}
 
@@ -49,28 +52,31 @@ export default function TecnologiasEditor({ value, onChange }) {
           <li key={fila.id}>
             <Subtitulo
               accion={
-                <BotonSecundario onClick={() => quitar(fila.id)} etiqueta={`Borrar la tecnología ${i + 1}`}>
+                <BotonSecundario
+                  onClick={() => quitar(fila.id)}
+                  etiqueta={t("panel.tecnologias.borrarTitulo", { n: i + 1 })}
+                >
                   <i className="fa-solid fa-trash" aria-hidden="true" />
-                  Borrar
+                  {t("panel.comunes.borrar")}
                 </BotonSecundario>
               }
             >
-              Tecnología {i + 1}
+              {t("panel.tecnologias.fila", { n: i + 1 })}
             </Subtitulo>
 
             <div className="mt-3 grid gap-4 lg:grid-cols-2">
               <SelectorIcono
-                etiqueta="Logo"
+                etiqueta={t("panel.comunes.logo")}
                 valor={fila.icono}
                 onChange={(nuevo) => cambiar(fila.id, "icono", nuevo)}
                 porDefecto={ICONO_TECNOLOGIA}
               />
               <Campo
-                etiqueta="Nombre"
+                etiqueta={t("panel.comunes.nombre")}
                 valor={fila.nombre}
                 onChange={(nuevo) => cambiar(fila.id, "nombre", nuevo)}
                 placeholder="React"
-                ayuda="Es el texto que se lee bajo el icono en el anillo."
+                ayuda={t("panel.tecnologias.ayuda")}
               />
             </div>
           </li>

@@ -12,6 +12,7 @@ frontend/               el sitio
   src/components/       cada sección es un componente: Navbar, Hero, Projects,
                         Gallery, WhatsappForm, Footer...
   src/config/branding.js  nombre, textos ES/EN y datos de contacto
+  src/config/panelTexts.js  textos del panel de administración ES/EN
   src/contexts/         tema, idioma y los ajustes de accesibilidad
   src/utils/            llamada a la API, portadas SVG, textos de los proyectos
   src/panel/            editores del panel de administración

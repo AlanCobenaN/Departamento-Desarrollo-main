@@ -11,9 +11,8 @@
  * vez de placeholders, que es como se juzga un panel: por si encaja con lo
  * que hay, no por si los campos existen.
  *
- * Los textos de este archivo NO pasan por el diccionario ES/EN: el panel es una
- * herramienta interna y de momento va solo en espanol. Si algun dia se publica,
- * hay que pasarlos por t() como el resto del sitio.
+ * Estos valores NO pasan por t(): son contenidos, no textos de interfaz.
+ * Los rotulos del panel si; ver config/panelTexts.js.
  */
 
 /**

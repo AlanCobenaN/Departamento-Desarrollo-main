@@ -1,4 +1,5 @@
 import { useId, useState } from "react";
+import { useSite } from "../contexts/SiteContext.jsx";
 import { ICONOS } from "./datos.js";
 
 /**
@@ -20,12 +21,13 @@ const TARJETA =
 const AVISO = "mt-1.5 text-xs text-fcvt-gray";
 
 /** Botón principal: el que hace la acción de la tarjeta. */
-export function BotonPrincipal({ onClick, children, tipo = "button" }) {
+export function BotonPrincipal({ onClick, children, tipo = "button", deshabilitado = false }) {
   return (
     <button
       type={tipo}
       onClick={onClick}
-      className="inline-flex items-center gap-2 rounded-lg bg-fcvt-primary px-4 py-2.5 text-sm font-bold text-white transition hover:bg-fcvt-primary-dark"
+      disabled={deshabilitado}
+      className="inline-flex items-center gap-2 rounded-lg bg-fcvt-primary px-4 py-2.5 text-sm font-bold text-white transition hover:bg-fcvt-primary-dark disabled:cursor-not-allowed disabled:opacity-50"
     >
       {children}
     </button>
@@ -118,6 +120,7 @@ export function Campo({
  * se pidió, un hueco sin relleno no.
  */
 export function SelectorIcono({ etiqueta, valor, onChange, porDefecto }) {
+  const { t } = useSite();
   const id = useId();
   const limpio = typeof valor === "string" ? valor.trim() : "";
   const desconocido = limpio !== "" && !ICONOS.includes(limpio);
@@ -143,11 +146,10 @@ export function SelectorIcono({ etiqueta, valor, onChange, porDefecto }) {
 
       <p id={`${id}-estado`} className={AVISO}>
         {limpio === "" ? (
-          "Sin logo: se dibuja el predeterminado del sitio."
+          t("panel.comunes.iconoVacio")
         ) : desconocido ? (
           <span className="text-amber-700 dark:text-amber-300">
-            Ese nombre no está en la lista. Si no existe en la versión de Font
-            Awesome que carga el sitio, el icono saldrá vacío.
+            {t("panel.comunes.iconoDesconocido")}
           </span>
         ) : (
           <span className="font-mono">{limpio}</span>
@@ -190,8 +192,10 @@ export function SelectorIcono({ etiqueta, valor, onChange, porDefecto }) {
  * entrada lo que veria el visitante.
  */
 export function CampoImagen({ etiqueta, valor, onChange, iconoPorDefecto = "fa-solid fa-image" }) {
+  const { t } = useSite();
   const id = useId();
   const idEstado = `${id}-estado`;
+  // Se guarda la clave, no el texto, para que el aviso cambie de idioma.
   const [error, setError] = useState("");
 
   function elegirArchivo(evento) {
@@ -202,7 +206,7 @@ export function CampoImagen({ etiqueta, valor, onChange, iconoPorDefecto = "fa-s
     if (!archivo) return;
 
     if (!archivo.type.startsWith("image/")) {
-      setError("Eso no es una imagen. Elige un archivo de imagen.");
+      setError("panel.comunes.errorTipoImagen");
       return;
     }
 
@@ -211,7 +215,7 @@ export function CampoImagen({ etiqueta, valor, onChange, iconoPorDefecto = "fa-s
       onChange(String(lector.result));
       setError("");
     };
-    lector.onerror = () => setError("No se pudo leer el archivo.");
+    lector.onerror = () => setError("panel.comunes.errorLectura");
     lector.readAsDataURL(archivo);
   }
 
@@ -242,17 +246,19 @@ export function CampoImagen({ etiqueta, valor, onChange, iconoPorDefecto = "fa-s
             type="text"
             value={valor && valor.startsWith("data:") ? "" : valor}
             onChange={(e) => onChange(e.target.value)}
-            placeholder="/img/galeria/foto.jpg o https://…"
-            aria-label={`Ruta de la imagen de ${etiqueta.toLowerCase()}`}
+            placeholder={t("panel.comunes.rutaPlaceholder")}
+            aria-label={t("panel.comunes.rutaAria", { campo: etiqueta.toLowerCase() })}
             className={`${INPUT} text-xs`}
           />
           {valor && (
             <BotonSecundario
               onClick={() => onChange("")}
-              etiqueta={`Quitar la imagen de ${etiqueta.toLowerCase()}`}
+              etiqueta={t("panel.comunes.quitarImagenAria", {
+                campo: etiqueta.toLowerCase(),
+              })}
             >
               <i className="fa-solid fa-xmark" aria-hidden="true" />
-              Quitar
+              {t("panel.comunes.quitar")}
             </BotonSecundario>
           )}
         </div>
@@ -266,7 +272,7 @@ export function CampoImagen({ etiqueta, valor, onChange, iconoPorDefecto = "fa-s
         role={error ? "alert" : undefined}
         className={error ? "mt-1.5 text-xs text-amber-700 dark:text-amber-300" : AVISO}
       >
-        {error || "Sin foto se usa la imagen por defecto del sitio. El archivo solo se lee aquí, no se sube."}
+        {error ? t(error) : t("panel.comunes.sinFoto")}
       </p>
     </div>
   );
@@ -289,8 +295,9 @@ export function ListaEtiquetas({
   onRenombrar,
   onBorrar,
   ayuda,
-  marcador = "Nombre de la etiqueta",
+  marcador,
 }) {
+  const { t } = useSite();
   const [nuevo, setNuevo] = useState("");
 
   function anadir(evento) {
@@ -312,14 +319,19 @@ export function ListaEtiquetas({
               value={valor}
               onChange={(e) => onRenombrar(i, e.target.value)}
               className={`${INPUT} py-2`}
-              aria-label={`${etiqueta}: etiqueta ${i + 1}`}
+              aria-label={t("panel.comunes.etiquetaAria", { lista: etiqueta, n: i + 1 })}
             />
-            <BotonSecundario onClick={() => onBorrar(i)} etiqueta={`Borrar la etiqueta ${valor}`}>
+            <BotonSecundario
+              onClick={() => onBorrar(i)}
+              etiqueta={t("panel.comunes.borrarEtiqueta", { valor })}
+            >
               <i className="fa-solid fa-trash" aria-hidden="true" />
             </BotonSecundario>
           </li>
         ))}
-        {valores.length === 0 && <li className={AVISO}>No hay etiquetas. Añade la primera abajo.</li>}
+        {valores.length === 0 && (
+          <li className={AVISO}>{t("panel.comunes.sinEtiquetas")}</li>
+        )}
       </ul>
 
       <form onSubmit={anadir} className="mt-3 flex flex-wrap items-center gap-2">
@@ -327,13 +339,16 @@ export function ListaEtiquetas({
           type="text"
           value={nuevo}
           onChange={(e) => setNuevo(e.target.value)}
-          placeholder={marcador}
-          aria-label={`Añadir etiqueta a ${etiqueta}`}
+          placeholder={marcador ?? t("panel.comunes.etiquetaPlaceholder")}
+          aria-label={t("panel.comunes.anadirEtiqueta", { lista: etiqueta })}
           className={`${INPUT} w-48 py-2`}
         />
-        <BotonSecundario onClick={anadir} etiqueta={`Añadir etiqueta a ${etiqueta}`}>
+        <BotonSecundario
+          onClick={anadir}
+          etiqueta={t("panel.comunes.anadirEtiqueta", { lista: etiqueta })}
+        >
           <i className="fa-solid fa-plus" aria-hidden="true" />
-          Añadir
+          {t("panel.comunes.anadir")}
         </BotonSecundario>
       </form>
 
@@ -346,12 +361,14 @@ export function ListaEtiquetas({
  * Grupo de pastillas para elegir una o varias cosas a la vez.
  *
  * Copia el aspecto del filtro de categorías del sitio, a propósito: si el
- * panel看上去 como otra página distinta, las decisiones que se toman en él
+ * panel se ve como otra página distinta, las decisiones que se toman en él
  * no sirven de referencia para la portada. `aria-pressed` y no `aria-selected`
  * porque no es una lista de opciones del menú, son botones que se activan.
  */
-export function Pastillas({ opciones, seleccionados, onAlternar, vacio = "No hay opciones todavía." }) {
-  if (opciones.length === 0) return <p className={AVISO}>{vacio}</p>;
+export function Pastillas({ opciones, seleccionados, onAlternar, vacio }) {
+  const { t } = useSite();
+  if (opciones.length === 0)
+    return <p className={AVISO}>{vacio ?? t("panel.comunes.sinOpciones")}</p>;
 
   return (
     <ul className="mt-1.5 flex flex-wrap gap-2">

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSite } from "../contexts/SiteContext.jsx";
 import { esCorreoInstitucional } from "../utils/correo.js";
 import { nuevoId } from "./datos.js";
 import {
@@ -10,6 +11,8 @@ import {
 } from "./comunes.jsx";
 
 export default function PermisosEditor({ valor = [], onCambiar }) {
+  const { t } = useSite();
+  // Se guarda la clave, no el texto, para que el aviso cambie de idioma.
   const [error, setError] = useState("");
   const [form, setForm] = useState({
     correo: "",
@@ -25,15 +28,15 @@ export default function PermisosEditor({ valor = [], onCambiar }) {
     setError("");
 
     if (!correo || !contrasena) {
-      setError("Rellena el correo y la contraseña.");
+      setError("panel.permisos.errorVacio");
       return;
     }
     if (!esCorreoInstitucional(correo)) {
-      setError("Solo se admiten correos de @uleam.edu.ec o @live.uleam.edu.ec.");
+      setError("panel.permisos.errorDominio");
       return;
     }
     if (contrasena.length < 8) {
-      setError("La contraseña debe tener al menos 8 caracteres.");
+      setError("panel.permisos.errorContrasena");
       return;
     }
 
@@ -42,7 +45,7 @@ export default function PermisosEditor({ valor = [], onCambiar }) {
       (c) => c.correo.trim().toLowerCase() === correo.toLowerCase()
     );
     if (existe) {
-      setError("Ese correo ya está en la lista de permisos.");
+      setError("panel.permisos.errorDuplicado");
       return;
     }
 
@@ -72,21 +75,16 @@ export default function PermisosEditor({ valor = [], onCambiar }) {
     <div className="space-y-8">
       <div>
         <p className="mt-1 text-sm text-fcvt-gray">
-          Da acceso a más correos institucionales para entrar al panel. El inicio
-          de sesión solo acepta contraseñas, pero este sistema es un prototipo:
-          se guarda en el navegador, no en la base de datos.
+          {t("panel.permisos.introduccion")}
         </p>
         <p className="mt-1 text-xs text-red-600 dark:text-red-400">
-          No es seguridad: en un navegador cualquiera puede leer esta lista y
-          concederse permiso.
+          {t("panel.permisos.avisoSeguridad")}
         </p>
       </div>
 
-      <Tarjeta titulo="Lista de correos con permiso">
+      <Tarjeta titulo={t("panel.permisos.lista")}>
         {valor.length === 0 ? (
-          <p className="text-sm text-fcvt-gray">
-            No hay otros correos. Solo queda la cuenta del prototipo.
-          </p>
+          <p className="text-sm text-fcvt-gray">{t("panel.permisos.vacio")}</p>
         ) : (
           <ul className="space-y-2">
             {valor.map((cuenta) => (
@@ -99,14 +97,11 @@ export default function PermisosEditor({ valor = [], onCambiar }) {
                     {cuenta.correo}
                   </span>
                   <span className="text-xs text-fcvt-gray">
-                    Contraseña: {cuenta.contrasena}
+                    {t("panel.permisos.contrasena", { valor: cuenta.contrasena })}
                   </span>
                 </div>
-                <BotonSecundario
-                  tipo="button"
-                  onClick={() => quitar(cuenta.correo)}
-                >
-                  Quitar permiso
+                <BotonSecundario onClick={() => quitar(cuenta.correo)}>
+                  {t("panel.permisos.quitar")}
                 </BotonSecundario>
               </li>
             ))}
@@ -114,25 +109,27 @@ export default function PermisosEditor({ valor = [], onCambiar }) {
         )}
       </Tarjeta>
 
-      <Tarjeta titulo="Añadir un correo institucional">
+      <Tarjeta titulo={t("panel.permisos.anadirTitulo")}>
         <div className="grid gap-4 md:grid-cols-2">
           <Campo
-            etiqueta="Correo institucional"
+            etiqueta={t("panel.permisos.correo")}
             tipo="email"
             valor={form.correo}
-            onCambiar={(v) => setForm((f) => ({ ...f, correo: v }))}
-            marcador="nombre.apellido@uleam.edu.ec"
+            onChange={(v) => setForm((f) => ({ ...f, correo: v }))}
+            placeholder="nombre.apellido@uleam.edu.ec"
           />
           <Campo
-            etiqueta="Contraseña para este acceso"
+            etiqueta={t("panel.permisos.clave")}
             tipo="password"
             valor={form.contrasena}
-            onCambiar={(v) => setForm((f) => ({ ...f, contrasena: v }))}
-            marcador="Mínimo 8 caracteres"
+            onChange={(v) => setForm((f) => ({ ...f, contrasena: v }))}
+            placeholder={t("panel.permisos.clavePlaceholder")}
           />
         </div>
         {error && (
-          <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>
+          <p role="alert" className="mt-2 text-sm text-red-600 dark:text-red-400">
+            {t(error)}
+          </p>
         )}
         <div className="mt-4 flex justify-end">
           <BotonPrincipal
@@ -140,14 +137,14 @@ export default function PermisosEditor({ valor = [], onCambiar }) {
             onClick={agregar}
             deshabilitado={!puedeAgregar}
           >
-            Dar permiso
+            {t("panel.permisos.dar")}
           </BotonPrincipal>
         </div>
-        <Subtitulo>Advertencia</Subtitulo>
+        <Subtitulo>{t("panel.permisos.advertencia")}</Subtitulo>
         <p className="text-xs text-fcvt-gray">
-          Estos datos se guardan en <strong>localStorage</strong> del navegador.
-          Si borras los datos del sitio, se pierden. No uses contraseñas reales
-          que uses en otros sitios.
+          {t("panel.permisos.avisoPrefijo")}{" "}
+          <strong>{t("panel.permisos.avisoResaltado")}</strong>
+          {t("panel.permisos.avisoSufijo")}
         </p>
       </Tarjeta>
     </div>

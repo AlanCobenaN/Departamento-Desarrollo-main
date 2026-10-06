@@ -15,13 +15,13 @@ import { borrar, guardar, leer } from "../panel/almacen.js";
 
 /** Las secciones del panel, en el orden en que se explican en la portada. */
 const SECCIONES = [
-  { id: "servicios", etiqueta: "Qué hacemos", icono: "fa-solid fa-laptop-code" },
-  { id: "tecnologias", etiqueta: "Tecnologías", icono: "fa-solid fa-code" },
-  { id: "proyectos", etiqueta: "Proyectos", icono: "fa-solid fa-diagram-project" },
-  { id: "galeria", etiqueta: "Galería", icono: "fa-solid fa-images" },
-  { id: "whatsapp", etiqueta: "Contacto WhatsApp", icono: "fa-brands fa-whatsapp" },
-  { id: "pie", etiqueta: "Pie de página", icono: "fa-solid fa-address-book" },
-  { id: "permisos", etiqueta: "Permisos", icono: "fa-solid fa-user-shield" },
+  { id: "servicios", key: "panel.secciones.servicios", icono: "fa-solid fa-laptop-code" },
+  { id: "tecnologias", key: "panel.secciones.tecnologias", icono: "fa-solid fa-code" },
+  { id: "proyectos", key: "panel.secciones.proyectos", icono: "fa-solid fa-diagram-project" },
+  { id: "galeria", key: "panel.secciones.galeria", icono: "fa-solid fa-images" },
+  { id: "whatsapp", key: "panel.secciones.whatsapp", icono: "fa-brands fa-whatsapp" },
+  { id: "pie", key: "panel.secciones.pie", icono: "fa-solid fa-address-book" },
+  { id: "permisos", key: "panel.secciones.permisos", icono: "fa-solid fa-user-shield" },
 ];
 
 /**
@@ -36,8 +36,7 @@ const SECCIONES = [
  * los editores se desmontan, así que si cada uno guardara lo suyo, cambiar de
  * pestaña tiraría los cambios de largo.
  *
- * Los textos van en español y fuera del diccionario, porque es una herramienta
- * interna. Si algún día el panel se publica, hay que pasarlos por t().
+ * Los textos de interfaz pasan por t(); el contenido que se edita aquí no.
  */
 export default function AdminPanel() {
   const { t, lang, toggleLang, dark, toggleTheme } = useSite();
@@ -76,7 +75,7 @@ export default function AdminPanel() {
   }
 
   function restablecer() {
-    if (window.confirm("¿Restablecer el sitio a los valores por defecto? Se borrarán los cambios guardados en este navegador.")) {
+    if (window.confirm(t("panel.cabecera.confirmarRestablecer"))) {
       setDatos(datosIniciales());
       borrar();
       setSucio(false);
@@ -99,7 +98,7 @@ export default function AdminPanel() {
               <span className="brand-shield h-9 w-9" />
             </span>
             <span className="text-sm font-extrabold leading-tight">
-              Panel del sitio
+              {t("panel.cabecera.titulo")}
               <span className="block text-[11px] font-medium text-fcvt-gray">
                 {site.faculty}
               </span>
@@ -109,12 +108,15 @@ export default function AdminPanel() {
           <div className="flex items-center gap-2">
             {sucio && (
               <span className="hidden text-xs font-bold text-amber-700 dark:text-amber-300 sm:inline">
-                Guardado solo en este navegador
+                {t("panel.cabecera.soloNavegador")}
               </span>
             )}
-            <BotonSecundario onClick={restablecer} etiqueta="Restablecer el sitio a los valores por defecto">
+            <BotonSecundario
+              onClick={restablecer}
+              etiqueta={t("panel.cabecera.restablecerCompleto")}
+            >
               <i className="fa-solid fa-arrows-rotate" aria-hidden="true" />
-              <span className="hidden sm:inline">Restablecer</span>
+              <span className="hidden sm:inline">{t("panel.cabecera.restablecer")}</span>
             </BotonSecundario>
 
             <AccessibilityMenu />
@@ -145,7 +147,7 @@ export default function AdminPanel() {
               className="inline-flex items-center gap-2 rounded-lg bg-fcvt-primary px-3.5 py-2 text-xs font-bold text-white transition hover:bg-fcvt-primary-dark"
             >
               <i className="fa-solid fa-arrow-left" aria-hidden="true" />
-              Volver al sitio
+              {t("panel.cabecera.volver")}
             </a>
           </div>
         </div>
@@ -159,17 +161,16 @@ export default function AdminPanel() {
             aria-hidden="true"
           />
           <p className="text-amber-900 dark:text-amber-200">
-            <strong className="font-bold">Prototipo.</strong> Los cambios se
-            <strong className="font-bold"> guardan solo en este navegador</strong>.
-            Al cambiar de equipo o borrar datos del sitio, se pierden. Sirve para
-            previsualizar los cambios antes de publicarlos.
+            <strong className="font-bold">{t("panel.aviso.titulo")}</strong>{" "}
+            <strong className="font-bold">{t("panel.aviso.resaltado")}</strong>{" "}
+            {t("panel.aviso.texto")}
           </p>
         </div>
       </div>
 
       <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-6 sm:px-6 lg:flex-row">
         {/* ---------- Secciones ---------- */}
-        <nav aria-label="Secciones del panel" className="lg:w-64 lg:shrink-0">
+        <nav aria-label={t("panel.cabecera.ariaSecciones")} className="lg:w-64 lg:shrink-0">
           <ul className="flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:overflow-visible lg:pb-0">
             {SECCIONES.map((item) => {
               const activa = item.id === seccion;
@@ -186,7 +187,7 @@ export default function AdminPanel() {
                     }`}
                   >
                     <i className={item.icono} aria-hidden="true" />
-                    {item.etiqueta}
+                    {t(item.key)}
                   </button>
                 </li>
               );
@@ -196,11 +197,10 @@ export default function AdminPanel() {
 
         {/* ---------- Editor ---------- */}
         <main id="panel" className="min-w-0 flex-1">
-          <h1 className="text-2xl font-extrabold tracking-tight">{enCurso?.etiqueta}</h1>
-          <p className="mt-1.5 text-sm text-fcvt-gray">
-            Los cambios se guardan solo en este navegador. La portada los lee
-            automáticamente cuando estás en español.
-          </p>
+          <h1 className="text-2xl font-extrabold tracking-tight">
+            {enCurso ? t(enCurso.key) : ""}
+          </h1>
+          <p className="mt-1.5 text-sm text-fcvt-gray">{t("panel.ayuda")}</p>
 
           <div className="mt-5">
             {seccion === "servicios" && (
@@ -229,7 +229,7 @@ export default function AdminPanel() {
           <div className="mt-6 flex justify-end gap-2">
             <BotonSecundario onClick={restablecer}>
               <i className="fa-solid fa-arrows-rotate" aria-hidden="true" />
-              Restablecer el sitio
+              {t("panel.cabecera.restablecerSitio")}
             </BotonSecundario>
           </div>
         </main>
