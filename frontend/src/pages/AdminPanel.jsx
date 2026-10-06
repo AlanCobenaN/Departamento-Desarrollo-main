@@ -27,10 +27,11 @@ const SECCIONES = [
 /**
  * Panel de administración del sitio.
  *
- * PROTOTIPO. Deja cambiar todo lo que se edita aquí, pero nada se guarda: al
- * recargar la página vuelve todo a como estaba. El aviso del principio está en
- * la propia pantalla y no en un archivo de documentación, que es donde lo
- * miraría alguien.
+ * PROTOTIPO. Deja cambiar todo lo que se edita aquí. Los cambios se guardan
+ * solo en este navegador (localStorage, clave fcvt-panel, ver almacen.js): no
+ * llegan a la base ni a otro equipo, y restablecer los borra. El aviso del
+ * principio está en la propia pantalla y no en un archivo de documentación,
+ * que es donde lo miraría alguien.
  *
  * El estado vive aquí y no en cada editor a propósito: al cambiar de sección
  * los editores se desmontan, así que si cada uno guardara lo suyo, cambiar de

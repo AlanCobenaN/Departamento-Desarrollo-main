@@ -2,9 +2,10 @@
  * Datos de partida del panel de administracion.
  *
  * OJO: el panel es un PROTOTIPO. Pinta lo que hay hoy en el sitio y deja
- * cambiarlo, pero nada se guarda: al recargar la pagina todo vuelve a su
- * sitio. Lo que se separa con una funcion es justamente para que recargar
- * regenere los identificadores desde cero.
+ * cambiarlo. Lo que cambias se guarda solo en este navegador (localStorage,
+ * clave fcvt-panel, ver almacen.js): al recargar sigue ahí, en otro equipo no
+ * y restablecer lo borra. Lo que se separa con una funcion es para que los
+ * identificadores se generen desde cero cuando no hay nada guardado.
  *
  * Los valores iniciales son copia de la configuracion real (branding.js,
  * data/tech.js y public/catalogo.json) para que se vea contenido de verdad en
