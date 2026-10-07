@@ -2,18 +2,18 @@
  * Datos de partida del panel de administracion.
  *
  * OJO: el panel es un PROTOTIPO. Pinta lo que hay hoy en el sitio y deja
- * cambiarlo, pero nada se guarda: al recargar la pagina todo vuelve a su
- * sitio. Lo que se separa con una funcion es justamente para que recargar
- * regenere los identificadores desde cero.
+ * cambiarlo. Lo que cambias se guarda solo en este navegador (localStorage,
+ * clave fcvt-panel, ver almacen.js): al recargar sigue ahí, en otro equipo no
+ * y restablecer lo borra. Lo que se separa con una funcion es para que los
+ * identificadores se generen desde cero cuando no hay nada guardado.
  *
  * Los valores iniciales son copia de la configuracion real (branding.js,
  * data/tech.js y public/catalogo.json) para que se vea contenido de verdad en
  * vez de placeholders, que es como se juzga un panel: por si encaja con lo
  * que hay, no por si los campos existen.
  *
- * Los textos de este archivo NO pasan por el diccionario ES/EN: el panel es una
- * herramienta interna y de momento va solo en espanol. Si algun dia se publica,
- * hay que pasarlos por t() como el resto del sitio.
+ * Estos valores NO pasan por t(): son contenidos, no textos de interfaz.
+ * Los rotulos del panel si; ver config/panelTexts.js.
  */
 
 /**

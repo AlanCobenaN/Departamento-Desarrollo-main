@@ -1,3 +1,4 @@
+import { useSite } from "../contexts/SiteContext.jsx";
 import { nuevoId } from "./datos.js";
 import {
   BotonPrincipal,
@@ -28,6 +29,8 @@ function enlaceReal(url) {
  * detalle fácil de no saber al rellenar el panel.
  */
 export default function PieEditor({ value, onChange }) {
+  const { t } = useSite();
+
   function cambiarCampo(campo, nuevo) {
     onChange({ ...value, [campo]: nuevo });
   }
@@ -63,22 +66,22 @@ export default function PieEditor({ value, onChange }) {
 
   return (
     <div className="space-y-5">
-      <Tarjeta titulo="Datos de contacto">
+      <Tarjeta titulo={t("panel.pie.contacto")}>
         <div className="grid gap-4 lg:grid-cols-3">
           <Campo
-            etiqueta="Correo"
+            etiqueta={t("panel.pie.correo")}
             valor={value.email}
             onChange={(nuevo) => cambiarCampo("email", nuevo)}
-            placeholder="correo@ejemplo.com"
+            placeholder={t("panel.pie.correoPlaceholder")}
           />
           <Campo
-            etiqueta="Teléfono"
+            etiqueta={t("panel.pie.telefono")}
             valor={value.telefono}
             onChange={(nuevo) => cambiarCampo("telefono", nuevo)}
             placeholder="+000 000-0000"
           />
           <Campo
-            etiqueta="Ubicación"
+            etiqueta={t("panel.pie.ubicacion")}
             valor={value.ubicacion}
             onChange={(nuevo) => cambiarCampo("ubicacion", nuevo)}
             placeholder="Manta, Manabí, Ecuador"
@@ -86,43 +89,46 @@ export default function PieEditor({ value, onChange }) {
         </div>
       </Tarjeta>
 
-      <Tarjeta titulo="Síguenos">
+      <Tarjeta titulo={t("panel.pie.seguenos")}>
         <ul className="space-y-5">
           {value.redes.map((red, i) => (
             <li key={red.id}>
               <Subtitulo
                 accion={
-                  <BotonSecundario onClick={() => quitarRed(red.id)} etiqueta={`Borrar la red ${i + 1}`}>
+                  <BotonSecundario
+                    onClick={() => quitarRed(red.id)}
+                    etiqueta={t("panel.pie.borrarRed", { n: i + 1 })}
+                  >
                     <i className="fa-solid fa-trash" aria-hidden="true" />
-                    Borrar
+                    {t("panel.comunes.borrar")}
                   </BotonSecundario>
                 }
               >
-                Red {i + 1}
+                {t("panel.pie.red", { n: i + 1 })}
               </Subtitulo>
 
               <div className="mt-3 grid gap-4 lg:grid-cols-[1fr_1fr_1.4fr]">
                 <SelectorIcono
-                  etiqueta="Icono"
+                  etiqueta={t("panel.comunes.icono")}
                   valor={red.icono}
                   onChange={(nuevo) => cambiarRed(red.id, "icono", nuevo)}
                   porDefecto={ICONO_RED}
                 />
                 <Campo
-                  etiqueta="Nombre"
+                  etiqueta={t("panel.comunes.nombre")}
                   valor={red.etiqueta}
                   onChange={(nuevo) => cambiarRed(red.id, "etiqueta", nuevo)}
                   placeholder="Instagram"
                 />
                 <Campo
-                  etiqueta="Dirección"
+                  etiqueta={t("panel.pie.direccion")}
                   valor={red.url}
                   onChange={(nuevo) => cambiarRed(red.id, "url", nuevo)}
                   placeholder="https://instagram.com/…"
                   ayuda={
                     enlaceReal(red.url)
-                      ? "Enlace real: el icono se vera activo."
-                      : "Sin dirección el icono sale desactivado en el pie, no lleva a la portada de la red."
+                      ? t("panel.pie.enlaceReal")
+                      : t("panel.pie.sinEnlace")
                   }
                 />
               </div>
@@ -133,14 +139,14 @@ export default function PieEditor({ value, onChange }) {
         <div className="mt-5">
           <BotonPrincipal onClick={anadirRed}>
             <i className="fa-solid fa-plus" aria-hidden="true" />
-            Añadir red
+            {t("panel.pie.anadirRed")}
           </BotonPrincipal>
         </div>
       </Tarjeta>
 
-      <Tarjeta titulo="Explorar">
+      <Tarjeta titulo={t("panel.pie.explorar")}>
         <ListaEtiquetas
-          etiqueta="Enlaces del pie"
+          etiqueta={t("panel.pie.enlaces")}
           valores={value.explorar.map((e) => e.etiqueta)}
           onAnadir={(texto) =>
             onChange({
@@ -150,15 +156,18 @@ export default function PieEditor({ value, onChange }) {
           }
           onRenombrar={(indice, texto) => cambiarEnlace(value.explorar[indice].id, "etiqueta", texto)}
           onBorrar={(indice) => quitarEnlace(value.explorar[indice].id)}
-          marcador="Nombre del enlace"
-          ayuda="Los destinos se editan abajo, uno por enlace."
+          marcador={t("panel.pie.enlacePlaceholder")}
+          ayuda={t("panel.pie.enlacesAyuda")}
         />
 
         <ul className="mt-4 space-y-2 border-t border-fcvt-lighter pt-4 dark:border-white/10">
           {value.explorar.map((enlace, i) => (
             <li key={enlace.id}>
               <label className="block text-xs font-bold uppercase tracking-wider text-fcvt-gray">
-                Destino de "{enlace.etiqueta || `enlace ${i + 1}`}"
+                {t("panel.pie.destinoDe", {
+                  enlace:
+                    enlace.etiqueta || t("panel.pie.enlaceFallback", { n: i + 1 }),
+                })}
               </label>
               <div className="mt-1.5 flex items-center gap-2">
                 <input
@@ -170,7 +179,10 @@ export default function PieEditor({ value, onChange }) {
                 />
                 <BotonSecundario
                   onClick={() => quitarEnlace(enlace.id)}
-                  etiqueta={`Borrar el enlace ${enlace.etiqueta || i + 1}`}
+                  etiqueta={t("panel.pie.borrarEnlace", {
+                    enlace:
+                      enlace.etiqueta || t("panel.pie.enlaceFallback", { n: i + 1 }),
+                  })}
                 >
                   <i className="fa-solid fa-trash" aria-hidden="true" />
                 </BotonSecundario>

@@ -1,4 +1,6 @@
-﻿/**
+﻿import { panelEn, panelEs } from "./panelTexts.js";
+
+/**
  * Identidad del sitio — inspirada en el tema "Academi" del aula virtual de la
  * institución.
  * Colores de marca extraídos del logo "logo_40_años": azul institucional
@@ -94,6 +96,7 @@ export const palette = {
 /** Diccionario de textos ES/EN */
 export const translations = {
   es: {
+    ...panelEs,
     nav: {
       inicio: "Inicio",
       servicios: "Qué hacemos",
@@ -283,6 +286,7 @@ export const translations = {
     },
   },
   en: {
+    ...panelEn,
     nav: {
       inicio: "Home",
       servicios: "What we do",

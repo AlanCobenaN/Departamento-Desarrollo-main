@@ -1,3 +1,4 @@
+import { useSite } from "../contexts/SiteContext.jsx";
 import { WA_PLACEHOLDER, waLink } from "../utils/whatsapp.js";
 import { nuevoId } from "./datos.js";
 import {
@@ -33,6 +34,8 @@ function conValores(texto) {
  * sustituye el formulario al enviar.
  */
 export default function WhatsappEditor({ value, onChange }) {
+  const { t } = useSite();
+
   function cambiarCampo(campo, nuevo) {
     onChange({ ...value, [campo]: nuevo });
   }
@@ -67,43 +70,43 @@ export default function WhatsappEditor({ value, onChange }) {
 
   return (
     <div className="space-y-5">
-      <Tarjeta titulo="Número y saludo">
+      <Tarjeta titulo={t("panel.whatsapp.tarjetaNumero")}>
         <div className="grid gap-4 lg:grid-cols-2">
           <Campo
-            etiqueta="Número de WhatsApp"
+            etiqueta={t("panel.whatsapp.numero")}
             valor={value.numero}
             onChange={(nuevo) => cambiarCampo("numero", nuevo)}
             placeholder={WA_PLACEHOLDER}
             ayuda={
               esRelleno
-                ? "Sigue siendo el número de relleno: el enlace abre WhatsApp pero no escribe a nadie."
+                ? t("panel.whatsapp.ayudaRelleno")
                 : soloDigitos
-                  ? "Correcto: solo dígitos."
-                  : "wa.me no acepta +, espacios ni guiones. Solo dígitos, con el prefijo del país (Ecuador: 5939XXXXXXXX)."
+                  ? t("panel.whatsapp.ayudaCorrecto")
+                  : t("panel.whatsapp.ayudaFormato")
             }
           />
           <Campo
-            etiqueta="Saludo del menú de navegación"
+            etiqueta={t("panel.whatsapp.saludo")}
             valor={value.saludo}
             onChange={(nuevo) => cambiarCampo("saludo", nuevo)}
-            placeholder="Hola, equipo. Escribo desde la página web."
-            ayuda="Es el mensaje del botón de contacto del menú, que no pasa por el formulario."
+            placeholder={t("panel.whatsapp.saludoPlaceholder")}
+            ayuda={t("panel.whatsapp.saludoAyuda")}
           />
         </div>
       </Tarjeta>
 
       <Tarjeta
-        titulo={`Motivos (${value.motivos.length})`}
+        titulo={t("panel.whatsapp.tituloMotivos", { n: value.motivos.length })}
         accion={
           <BotonPrincipal onClick={anadirMotivo}>
             <i className="fa-solid fa-plus" aria-hidden="true" />
-            Añadir motivo
+            {t("panel.whatsapp.anadirMotivo")}
           </BotonPrincipal>
         }
       >
         {value.motivos.length === 0 && (
           <p className="text-sm text-fcvt-gray">
-            Sin motivos el formulario se queda sin botones donde elegir.
+            {t("panel.whatsapp.vacioMotivos")}
           </p>
         )}
 
@@ -117,39 +120,39 @@ export default function WhatsappEditor({ value, onChange }) {
                   accion={
                     <BotonSecundario
                       onClick={() => quitarMotivo(motivo.id)}
-                      etiqueta={`Borrar el motivo ${i + 1}`}
+                      etiqueta={t("panel.whatsapp.borrarMotivo", { n: i + 1 })}
                     >
                       <i className="fa-solid fa-trash" aria-hidden="true" />
-                      Borrar
+                      {t("panel.comunes.borrar")}
                     </BotonSecundario>
                   }
                 >
-                  Motivo {i + 1}
+                  {t("panel.whatsapp.motivo", { n: i + 1 })}
                 </Subtitulo>
 
                 <div className="mt-3 space-y-4">
                   <Campo
-                    etiqueta="Nombre del motivo"
+                    etiqueta={t("panel.whatsapp.motivoNombre")}
                     valor={motivo.etiqueta}
                     onChange={(nuevo) => cambiarMotivo(motivo.id, "etiqueta", nuevo)}
-                    placeholder="Un proyecto nuevo"
-                    ayuda="Es el texto del botón. Si se deja vacío el motivo no se puede elegir."
+                    placeholder={t("panel.whatsapp.motivoPlaceholder")}
+                    ayuda={t("panel.whatsapp.motivoAyuda")}
                   />
                   <Campo
-                    etiqueta="Mensaje"
+                    etiqueta={t("panel.whatsapp.mensaje")}
                     multilinea
                     filas={4}
                     valor={motivo.texto}
                     onChange={(nuevo) => cambiarMotivo(motivo.id, "texto", nuevo)}
-                    ayuda="Usa {nombre} y {mensaje} para saber dónde va cada cosa."
+                    ayuda={t("panel.whatsapp.mensajeAyuda")}
                   />
 
                   <details className="rounded-lg bg-fcvt-white p-3 ring-1 ring-fcvt-lighter dark:bg-white/5 dark:ring-white/10">
                     <summary className="cursor-pointer text-xs font-bold uppercase tracking-wider text-fcvt-gray">
-                      Cómo quedaría el mensaje
+                      {t("panel.whatsapp.preview")}
                     </summary>
                     <p className="mt-2 whitespace-pre-wrap text-sm text-fcvt-dark dark:text-fcvt-dark">
-                      {conValores(motivo.texto) || "(vacío)"}
+                      {conValores(motivo.texto) || t("panel.whatsapp.vacio")}
                     </p>
                     <p className="mt-2 break-all font-mono text-xs text-fcvt-gray">
                       {enlace}

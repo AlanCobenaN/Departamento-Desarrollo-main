@@ -1,3 +1,4 @@
+import { useSite } from "../contexts/SiteContext.jsx";
 import { nuevoId } from "./datos.js";
 import {
   BotonPrincipal,
@@ -21,6 +22,7 @@ import {
  * usan, en vez de dejar datos huérfanos.
  */
 export default function ProyectosEditor({ value, onChange }) {
+  const { t } = useSite();
   const { proyectos, categorias, etiquetasTecnologia } = value;
 
   function actualizarProyectos(nuevos) {
@@ -61,7 +63,7 @@ export default function ProyectosEditor({ value, onChange }) {
         return {
           ...p,
           tecnologias: dentro
-            ? p.tecnologias.filter((t) => t !== etiqueta)
+            ? p.tecnologias.filter((tec) => tec !== etiqueta)
             : [...p.tecnologias, etiqueta],
         };
       }),
@@ -120,7 +122,7 @@ export default function ProyectosEditor({ value, onChange }) {
         antes && antes !== texto
           ? proyectos.map((p) =>
               p.tecnologias.includes(antes)
-                ? { ...p, tecnologias: p.tecnologias.map((t) => (t === antes ? texto : t)) }
+                ? { ...p, tecnologias: p.tecnologias.map((tec) => (tec === antes ? texto : tec)) }
                 : p,
             )
           : proyectos,
@@ -134,7 +136,7 @@ export default function ProyectosEditor({ value, onChange }) {
       etiquetasTecnologia: etiquetasTecnologia.filter((_, i) => i !== indice),
       proyectos: proyectos.map((p) =>
         p.tecnologias.includes(borrada)
-          ? { ...p, tecnologias: p.tecnologias.filter((t) => t !== borrada) }
+          ? { ...p, tecnologias: p.tecnologias.filter((tec) => tec !== borrada) }
           : p,
       ),
     });
@@ -143,17 +145,17 @@ export default function ProyectosEditor({ value, onChange }) {
   return (
     <div className="space-y-5">
       <Tarjeta
-        titulo={`Proyectos (${proyectos.length})`}
+        titulo={t("panel.proyectos.titulo", { n: proyectos.length })}
         accion={
           <BotonPrincipal onClick={anadirProyecto}>
             <i className="fa-solid fa-plus" aria-hidden="true" />
-            Añadir proyecto
+            {t("panel.proyectos.anadir")}
           </BotonPrincipal>
         }
       >
         {proyectos.length === 0 && (
           <p className="text-sm text-fcvt-gray">
-            No hay proyectos. La sección de la portada saldría vacía.
+            {t("panel.proyectos.vacio")}
           </p>
         )}
 
@@ -162,7 +164,9 @@ export default function ProyectosEditor({ value, onChange }) {
             // Etiquetas que el proyecto usa pero que ya no están en la lista.
             // Se avisan en vez de borrarlas solas: puede que la etiqueta se
             // haya borrado sin querer y el dato del proyecto siga siendo bueno.
-            const huerfanas = proyecto.tecnologias.filter((t) => !etiquetasTecnologia.includes(t));
+            const huerfanas = proyecto.tecnologias.filter(
+              (tec) => !etiquetasTecnologia.includes(tec),
+            );
 
             return (
               <li key={proyecto.id}>
@@ -170,41 +174,41 @@ export default function ProyectosEditor({ value, onChange }) {
                   accion={
                     <BotonSecundario
                       onClick={() => quitarProyecto(proyecto.id)}
-                      etiqueta={`Borrar el proyecto ${i + 1}`}
+                      etiqueta={t("panel.proyectos.borrarTitulo", { n: i + 1 })}
                     >
                       <i className="fa-solid fa-trash" aria-hidden="true" />
-                      Borrar
+                      {t("panel.comunes.borrar")}
                     </BotonSecundario>
                   }
                 >
-                  Proyecto {i + 1}
+                  {t("panel.proyectos.fila", { n: i + 1 })}
                 </Subtitulo>
 
                 <div className="mt-3 space-y-4">
                   <CampoImagen
-                    etiqueta="Foto"
+                    etiqueta={t("panel.comunes.foto")}
                     valor={proyecto.foto}
                     onChange={(nuevo) => cambiar(proyecto.id, "foto", nuevo)}
                   />
 
                   <Campo
-                    etiqueta="Nombre"
+                    etiqueta={t("panel.comunes.nombre")}
                     valor={proyecto.nombre}
                     onChange={(nuevo) => cambiar(proyecto.id, "nombre", nuevo)}
-                    placeholder="Portal de Servicios Digitales"
+                    placeholder={t("panel.proyectos.nombrePlaceholder")}
                   />
 
                   <Campo
-                    etiqueta="Descripción"
+                    etiqueta={t("panel.comunes.descripcion")}
                     multilinea
                     valor={proyecto.descripcion}
                     onChange={(nuevo) => cambiar(proyecto.id, "descripcion", nuevo)}
-                    placeholder="Qué hace el proyecto y para quién."
+                    placeholder={t("panel.proyectos.descripcionPlaceholder")}
                   />
 
                   <div>
                     <p className="block text-xs font-bold uppercase tracking-wider text-fcvt-gray">
-                      Etiqueta de categoría
+                      {t("panel.proyectos.etiquetaCategoria")}
                     </p>
                     <Pastillas
                       opciones={categorias}
@@ -215,36 +219,36 @@ export default function ProyectosEditor({ value, onChange }) {
                           elegida === proyecto.categoria ? "" : elegida,
                         )
                       }
-                      vacio="No hay etiquetas de categoría. Añádelas abajo."
+                      vacio={t("panel.proyectos.vacioCategorias")}
                     />
                   </div>
 
                   <div>
                     <p className="block text-xs font-bold uppercase tracking-wider text-fcvt-gray">
-                      Etiquetas de tecnología
+                      {t("panel.proyectos.etiquetasTecnologia")}
                     </p>
                     <Pastillas
                       opciones={etiquetasTecnologia}
                       seleccionados={proyecto.tecnologias}
                       onAlternar={(elegida) => alternarTecnologia(proyecto.id, elegida)}
-                      vacio="No hay etiquetas de tecnología. Añádelas abajo."
+                      vacio={t("panel.proyectos.vacioTecnologias")}
                     />
 
                     {huerfanas.length > 0 && (
                       <p className="mt-2 text-xs text-amber-700 dark:text-amber-300">
-                        Usa etiquetas que no están en la lista:{" "}
-                        {huerfanas.map((t) => (
+                        {t("panel.proyectos.huerfanasPrefijo")}{" "}
+                        {huerfanas.map((etiqueta) => (
                           <button
-                            key={t}
+                            key={etiqueta}
                             type="button"
-                            onClick={() => alternarTecnologia(proyecto.id, t)}
-                            title={`Quitar ${t} de este proyecto`}
+                            onClick={() => alternarTecnologia(proyecto.id, etiqueta)}
+                            title={t("panel.proyectos.quitarEtiquetaAria", { etiqueta })}
                             className="mr-1.5 rounded-full bg-fcvt-lighter px-2 py-0.5 font-bold dark:bg-white/10"
                           >
-                            {t} <i className="fa-solid fa-xmark" aria-hidden="true" />
+                            {etiqueta} <i className="fa-solid fa-xmark" aria-hidden="true" />
                           </button>
                         ))}
-                        . Añádelas a la lista de abajo o quítalas del proyecto.
+                        {t("panel.proyectos.huerfanasSufijo")}
                       </p>
                     )}
                   </div>
@@ -256,27 +260,27 @@ export default function ProyectosEditor({ value, onChange }) {
       </Tarjeta>
 
       <div className="grid gap-5 lg:grid-cols-2">
-        <Tarjeta titulo="Etiquetas de categoría">
+        <Tarjeta titulo={t("panel.proyectos.tarjetaCategorias")}>
           <ListaEtiquetas
-            etiqueta="Categorías"
+            etiqueta={t("panel.proyectos.categorias")}
             valores={categorias}
             onAnadir={anadirCategoria}
             onRenombrar={renombrarCategoria}
             onBorrar={borrarCategoria}
-            marcador="Educación"
-            ayuda="Al renombrar o borrar una categoría se corrigen los proyectos que la usan."
+            marcador={t("panel.proyectos.categoriasPlaceholder")}
+            ayuda={t("panel.proyectos.categoriasAyuda")}
           />
         </Tarjeta>
 
-        <Tarjeta titulo="Etiquetas de tecnología">
+        <Tarjeta titulo={t("panel.proyectos.tarjetaTecnologias")}>
           <ListaEtiquetas
-            etiqueta="Tecnologías"
+            etiqueta={t("panel.proyectos.tecnologias")}
             valores={etiquetasTecnologia}
             onAnadir={anadirTecnologia}
             onRenombrar={renombrarTecnologia}
             onBorrar={borrarTecnologia}
             marcador="React"
-            ayuda="Al renombrar o borrar una tecnología se corrigen los proyectos que la usan."
+            ayuda={t("panel.proyectos.tecnologiasAyuda")}
           />
         </Tarjeta>
       </div>

@@ -12,11 +12,12 @@ frontend/               el sitio
   src/components/       cada sección es un componente: Navbar, Hero, Projects,
                         Gallery, WhatsappForm, Footer...
   src/config/branding.js  nombre, textos ES/EN y datos de contacto
+  src/config/panelTexts.js  textos del panel de administración ES/EN
   src/contexts/         tema, idioma y los ajustes de accesibilidad
   src/utils/            llamada a la API, portadas SVG, textos de los proyectos
   src/panel/            editores del panel de administración
   login/                página de acceso, con su propia entrada de build
-  panel-de/             panel de administración, con su propia entrada de build
+  panel-de-administrador/  panel de administración, con su propia entrada de build
 api/                    la API en PHP
   public/index.php      punto de entrada y rutas
   src/                  Controllers, Services, Repositories
@@ -28,18 +29,24 @@ textos, nombre del sitio y número de WhatsApp.
 
 ## Acceso y panel
 
-`/login/` y `/panel-de/` son páginas aparte, con su propia entrada de build,
-porque en GitHub Pages una carpeta es una ruta de verdad y una ruta de router
-daría 404 al recargarla.
+`/login/` y `/panel-de-administrador/` son páginas aparte, con su propia entrada
+de build, porque en GitHub Pages una carpeta es una ruta de verdad y una ruta
+de router daría 404 al recargarla.
 
 Ahora mismo el acceso es un **prototipo**: solo pasa la cuenta
-`admin@uleam.edu.ec` / `admin123`, que está escrita en
-`frontend/src/pages/Login.jsx`. No es seguridad, es una puerta abierta para
-poder probar el panel sin montar autenticación.
+`admin@uleam.edu.ec` / `admin123`, que sale de la lista de permisos del
+propio panel (`CUENTA_PROTOTIPO` en `frontend/src/panel/almacen.js`). No es
+seguridad, es una puerta abierta para poder probar el panel sin montar
+autenticación.
 
 El panel deja cambiar servicios, tecnologías, proyectos, galería, contacto de
-WhatsApp y pie de página, pero **no guarda nada**: al recargar vuelve todo a su
-sitio. Los datos de partida están en `frontend/src/panel/datos.js`.
+WhatsApp y pie de página. Los cambios se guardan **solo en ese navegador**
+(`localStorage`, clave `fcvt-panel`): no llegan a la base ni a otro equipo, y
+el botón de restablecer los borra. Los datos de partida están en
+`frontend/src/panel/datos.js`.
+
+La interfaz del panel tiene botón ES/EN; los contenidos que editas quedan en
+español.
 
 ## Requisitos
 

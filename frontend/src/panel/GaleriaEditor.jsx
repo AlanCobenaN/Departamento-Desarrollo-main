@@ -1,3 +1,4 @@
+import { useSite } from "../contexts/SiteContext.jsx";
 import { nuevoId } from "./datos.js";
 import {
   BotonPrincipal,
@@ -16,6 +17,8 @@ import {
  * palabra, que es justo lo que hace que un sitio parezca sin terminar.
  */
 export default function GaleriaEditor({ value, onChange }) {
+  const { t } = useSite();
+
   function cambiar(id, campo, nuevo) {
     onChange(value.map((fila) => (fila.id === id ? { ...fila, [campo]: nuevo } : fila)));
   }
@@ -30,17 +33,17 @@ export default function GaleriaEditor({ value, onChange }) {
 
   return (
     <Tarjeta
-      titulo={`Fotos de la galería (${value.length})`}
+      titulo={t("panel.galeria.titulo", { n: value.length })}
       accion={
         <BotonPrincipal onClick={anadir}>
           <i className="fa-solid fa-plus" aria-hidden="true" />
-          Añadir foto
+          {t("panel.galeria.anadir")}
         </BotonPrincipal>
       }
     >
       {value.length === 0 && (
         <p className="text-sm text-fcvt-gray">
-          No hay fotos. La galería quedaría vacía.
+          {t("panel.galeria.vacio")}
         </p>
       )}
 
@@ -49,27 +52,30 @@ export default function GaleriaEditor({ value, onChange }) {
           <li key={fila.id}>
             <Subtitulo
               accion={
-                <BotonSecundario onClick={() => quitar(fila.id)} etiqueta={`Borrar la foto ${i + 1}`}>
+                <BotonSecundario
+                  onClick={() => quitar(fila.id)}
+                  etiqueta={t("panel.galeria.borrarTitulo", { n: i + 1 })}
+                >
                   <i className="fa-solid fa-trash" aria-hidden="true" />
-                  Borrar
+                  {t("panel.comunes.borrar")}
                 </BotonSecundario>
               }
             >
-              Foto {i + 1}
+              {t("panel.galeria.fila", { n: i + 1 })}
             </Subtitulo>
 
             <div className="mt-3 space-y-4">
               <CampoImagen
-                etiqueta="Foto"
+                etiqueta={t("panel.comunes.foto")}
                 valor={fila.foto}
                 onChange={(nuevo) => cambiar(fila.id, "foto", nuevo)}
               />
               <Campo
-                etiqueta="Título"
+                etiqueta={t("panel.comunes.titulo")}
                 valor={fila.titulo}
                 onChange={(nuevo) => cambiar(fila.id, "titulo", nuevo)}
-                placeholder="Panel general"
-                ayuda="Es el texto que se ve al abrir la foto."
+                placeholder={t("panel.galeria.tituloPlaceholder")}
+                ayuda={t("panel.galeria.tituloAyuda")}
               />
             </div>
           </li>
