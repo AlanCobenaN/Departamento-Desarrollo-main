@@ -4,11 +4,11 @@ import { useContenido } from "../content/ContenidoContext.jsx";
 import { useMemo } from "react";
 
 const DEFAULT_EXPLORE = [
-  { labelKey: "home", href: "#inicio" },
-  { labelKey: "services", href: "#servicios" },
-  { labelKey: "projects", href: "#proyectos" },
-  { labelKey: "gallery", href: "#galeria" },
-  { labelKey: "whatsapp", href: "#escribenos" },
+  { key: "nav.inicio", href: "#inicio" },
+  { key: "nav.servicios", href: "#servicios" },
+  { key: "nav.proyectos", href: "#proyectos" },
+  { key: "nav.galeria", href: "#galeria" },
+  { key: "nav.contacto", href: "#escribenos" },
 ];
 
 const ICONO_RED = "fa-solid fa-link";
@@ -30,7 +30,7 @@ export default function Footer() {
     return DEFAULT_EXPLORE.map((e) => ({
       id: e.href,
       href: e.href,
-      label: t(`footer.explore.${e.labelKey}`),
+      label: t(e.key),
     }));
   }, [contenido, t]);
 
@@ -78,7 +78,7 @@ export default function Footer() {
 
         <div>
           <h3 className="text-sm font-bold uppercase tracking-wider text-fcvt-dark">
-            {t("footer.exploreTitle")}
+            {t("footer.explorar")}
           </h3>
           <ul className="mt-4 space-y-2">
             {explore.map((link) => (
@@ -116,7 +116,7 @@ export default function Footer() {
 
         <div>
           <h3 className="text-sm font-bold uppercase tracking-wider text-fcvt-dark">
-            {t("footer.socialTitle")}
+            {t("footer.follow")}
           </h3>
           <div className="mt-4 flex flex-wrap gap-2">
             {redes.map((r) => (

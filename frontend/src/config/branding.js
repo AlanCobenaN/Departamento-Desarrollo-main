@@ -181,8 +181,10 @@ export const translations = {
       reintentar: "Reintentar",
     },
     gallery: {
+      eyebrow: "Imágenes del proyecto",
       title: "Galería",
       subtitle: "Una muestra visual de la plataforma y sus proyectos.",
+      empty: "Todavía no hay imágenes que mostrar.",
       cerrar: "Cerrar galería",
       anterior: "Imagen anterior",
       siguiente: "Imagen siguiente",
@@ -198,6 +200,9 @@ export const translations = {
       explorar: "Explorar",
       contactTitle: "Contacto",
       follow: "Síguenos",
+      description:
+        "Desarrollo de software y soporte tecnológico para la comunidad universitaria.",
+      copy: "© {year} Departamento de Desarrollo — Estudios y Construcciones ULEAM-EP.",
       placeholders: "Datos de ejemplo para el prototipo.",
     },
     whatsapp: {
@@ -370,8 +375,10 @@ export const translations = {
       reintentar: "Retry",
     },
     gallery: {
+      eyebrow: "Project images",
       title: "Gallery",
       subtitle: "A visual sample of the platform and its projects.",
+      empty: "There are no images to show yet.",
       cerrar: "Close gallery",
       anterior: "Previous image",
       siguiente: "Next image",
@@ -387,6 +394,8 @@ export const translations = {
       explorar: "Explore",
       contactTitle: "Contact",
       follow: "Follow us",
+      description: "Software development and technical support for the university community.",
+      copy: "© {year} Departamento de Desarrollo — Estudios y Construcciones ULEAM-EP.",
       placeholders: "Sample data for the prototype.",
     },
     whatsapp: {

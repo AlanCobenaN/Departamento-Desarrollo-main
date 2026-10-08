@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import Navbar from "./components/Navbar.jsx";
 import Hero from "./components/Hero.jsx";
 import Services from "./components/Services.jsx";
+import TechRing from "./components/TechRing.jsx";
 import Projects from "./components/Projects.jsx";
 import Gallery from "./components/Gallery.jsx";
 import WhatsappForm from "./components/WhatsappForm.jsx";
@@ -67,6 +68,7 @@ function Layout() {
       <main id="contenido" className="flex-1">
         <Hero projectCount={projLoading ? 0 : projects.length} />
         <Services />
+        <TechRing />
         <Projects
           projects={projects}
           loading={projLoading}

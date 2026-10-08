@@ -106,7 +106,7 @@ export default function Gallery({ projects = [] }) {
           className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/90 px-4 py-6"
           role="dialog"
           aria-modal="true"
-          aria-label={t("gallery.viewer")}
+          aria-label={t("gallery.title")}
           onClick={close}
         >
           <div
@@ -126,7 +126,7 @@ export default function Gallery({ projects = [] }) {
               type="button"
               onClick={prev}
               className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:left-4 sm:p-3"
-              aria-label={t("gallery.prev")}
+              aria-label={t("gallery.anterior")}
             >
               <i className="fa-solid fa-chevron-left" aria-hidden="true" />
             </button>
@@ -134,7 +134,7 @@ export default function Gallery({ projects = [] }) {
               type="button"
               onClick={next}
               className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:right-4 sm:p-3"
-              aria-label={t("gallery.next")}
+              aria-label={t("gallery.siguiente")}
             >
               <i className="fa-solid fa-chevron-right" aria-hidden="true" />
             </button>
@@ -142,7 +142,7 @@ export default function Gallery({ projects = [] }) {
               type="button"
               onClick={close}
               className="absolute right-2 top-2 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 sm:right-4 sm:top-4 sm:p-3"
-              aria-label={t("gallery.close")}
+              aria-label={t("gallery.cerrar")}
             >
               <i className="fa-solid fa-xmark" aria-hidden="true" />
             </button>

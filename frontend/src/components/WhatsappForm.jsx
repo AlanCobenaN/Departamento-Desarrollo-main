@@ -110,7 +110,7 @@ export default function WhatsappForm() {
           >
             {esRelleno && (
               <div className="mb-4 rounded-lg border border-amber-400/40 bg-amber-50/80 px-3 py-2 text-xs text-amber-900 dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-100">
-                {t("whatsapp.placeholder")}
+                {t("whatsapp.aviso")}
               </div>
             )}
             <div>
@@ -170,7 +170,7 @@ export default function WhatsappForm() {
               </button>
               {enviado && (
                 <span className="text-xs font-medium text-fcvt-primary dark:text-fcvt-accent">
-                  {t("whatsapp.abriendo")}
+                  {t("whatsapp.enviado")}
                 </span>
               )}
             </div>

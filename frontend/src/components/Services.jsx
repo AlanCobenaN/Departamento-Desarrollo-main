@@ -33,8 +33,8 @@ export default function Services() {
     return AREAS.map((area) => ({
       n: area.n,
       icon: area.icon,
-      titulo: t(`${area.key}.title`),
-      desc: t(`${area.key}.desc`),
+      titulo: t(`services.${area.key}.title`),
+      desc: t(`services.${area.key}.desc`),
     }));
   }, [contenido, AREAS, t]);
 
