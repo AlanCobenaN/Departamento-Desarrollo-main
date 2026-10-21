@@ -1,0 +1,157 @@
+erDiagram
+    %% Acceso: obligatorio (||). Autoria: opcional (|o) porque creado_por es nullable.
+    roles ||--o{ usuarios : "tiene"
+    usuarios ||--o{ sesiones : "abre"
+    usuarios |o--o{ auditoria : "genera"
+    usuarios |o--o{ proyectos : "crea / edita"
+    usuarios |o--o{ servicios : "crea / edita"
+    usuarios |o--o{ tecnologias_sitio : "crea / edita"
+    usuarios |o--o{ galeria : "crea / edita"
+    usuarios |o--o{ redes_sociales : "crea / edita"
+    usuarios |o--o{ enlaces_pie : "crea / edita"
+    usuarios |o--o{ configuracion : "actualiza"
+    categorias ||--o{ proyectos : "clasifica"
+
+    %% FK hacia usuarios: ON DELETE RESTRICT (las cuentas se desactivan, no se borran).
+    %% Trigger marcar_actualizado_en() en toda tabla con actualizado_en.
+
+    roles {
+        smallint id PK
+        text nombre UK "admin | editor"
+    }
+
+    usuarios {
+        bigint id PK
+        text correo "UNIQUE INDEX sobre lower(correo); CHECK dominio uleam"
+        text password_hash "Argon2id"
+        text nombre
+        smallint rol_id FK
+        boolean activo
+        int intentos_fallidos
+        timestamptz bloqueado_hasta
+        timestamptz ultimo_acceso
+        timestamptz creado_en
+        timestamptz actualizado_en
+    }
+
+    sesiones {
+        text token_hash PK "SHA-256 hex, nunca el token"
+        text csrf_hash "SHA-256 hex del token CSRF de la sesion"
+        bigint usuario_id FK "indice"
+        timestamptz expira_en "indice (purga)"
+        inet ip
+        text user_agent
+        timestamptz creado_en
+        timestamptz revocada_en "nullable"
+    }
+
+    intentos_login {
+        bigint id PK
+        text correo "sin FK; indice (correo, creado_en)"
+        inet ip "indice (ip, creado_en)"
+        boolean exitoso
+        timestamptz creado_en
+    }
+
+    auditoria {
+        bigint id PK
+        bigint usuario_id FK "nullable; RESTRICT"
+        text accion
+        text entidad "indice (entidad, entidad_id)"
+        text entidad_id "text: admite PK textual"
+        jsonb detalle "incluye correo intentado si falla login"
+        inet ip "nullable"
+        timestamptz creado_en "indice; solo INSERT/SELECT"
+    }
+
+    categorias {
+        text nombre PK
+    }
+
+    proyectos {
+        bigint id PK
+        text nombre
+        text categoria FK
+        text descripcion
+        text_array tecnologias "text[]; chips del proyecto"
+        text url "CHECK https://, nullable"
+        text foto "CHECK https:// o /ruta (no //), nullable"
+        boolean activo
+        boolean destacado "reemplaza el recorte a 4 de api.js"
+        int orden "ORDER BY orden, id"
+        bigint creado_por FK "nullable"
+        bigint actualizado_por FK "nullable"
+        timestamptz creado_en
+        timestamptz actualizado_en
+        tsvector busqueda "generada, indice GIN"
+    }
+
+    servicios {
+        bigint id PK
+        text titulo
+        text descripcion
+        text icono
+        int orden
+        boolean activo
+        bigint creado_por FK "nullable"
+        bigint actualizado_por FK "nullable"
+        timestamptz creado_en
+        timestamptz actualizado_en
+    }
+
+    tecnologias_sitio {
+        bigint id PK
+        text nombre
+        text icono
+        int orden
+        boolean activo
+        bigint creado_por FK "nullable"
+        bigint actualizado_por FK "nullable"
+        timestamptz creado_en
+        timestamptz actualizado_en
+    }
+
+    galeria {
+        bigint id PK
+        text titulo
+        text imagen_url "CHECK https:// o /ruta (no //)"
+        text texto_alt
+        int orden
+        boolean activo
+        bigint creado_por FK "nullable"
+        bigint actualizado_por FK "nullable"
+        timestamptz creado_en
+        timestamptz actualizado_en
+    }
+
+    redes_sociales {
+        bigint id PK
+        text etiqueta
+        text icono
+        text url "CHECK https://"
+        int orden
+        boolean activo
+        bigint creado_por FK "nullable"
+        bigint actualizado_por FK "nullable"
+        timestamptz creado_en
+        timestamptz actualizado_en
+    }
+
+    enlaces_pie {
+        bigint id PK
+        text etiqueta
+        text href "CHECK https:// o /ruta (no //)"
+        int orden
+        boolean activo
+        bigint creado_por FK "nullable"
+        bigint actualizado_por FK "nullable"
+        timestamptz creado_en
+        timestamptz actualizado_en
+    }
+
+    configuracion {
+        text clave PK
+        jsonb valor "WhatsApp, textos"
+        bigint actualizado_por FK "nullable"
+        timestamptz actualizado_en
+    }
