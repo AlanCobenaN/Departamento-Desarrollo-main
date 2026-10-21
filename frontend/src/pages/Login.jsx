@@ -2,21 +2,16 @@ import { useEffect, useId, useRef, useState } from "react";
 import { useSite } from "../contexts/SiteContext.jsx";
 import site from "../config/branding.js";
 import { EMAIL_RE } from "../utils/correo.js";
-import { CUENTA_PROTOTIPO, buscarCuenta, leer } from "../panel/almacen.js";
 
 const MIN_PASSWORD = 8;
 const RECORDAR_KEY = "fcvt-login-email";
 
-/** Vista a la que se entra al enviar el formulario: el panel de administracion. */
-const SIGUIENTE_VISTA = `${import.meta.env.BASE_URL}panel-de-administrador/`;
-
 /**
  * Pagina de acceso, en su propia ruta y con su propia carga de pagina.
  *
- * Por ahora solo deja pasar a la cuenta del prototipo, que es la unica que
- * existe: no hay backend de autenticacion, asi que el envio no abre ninguna
- * sesion real, solo salta al panel. El formulario si valida en el navegador,
- * que es la parte que se puede comprobar de verdad.
+ * Todavia no hay backend de autenticacion, asi que el formulario solo valida
+ * el formato y avisa de que el acceso no esta disponible. No compara
+ * credenciales ni redirige al panel.
  */
 export default function Login() {
   const { t, lang, toggleLang, dark, toggleTheme } = useSite();
@@ -39,18 +34,18 @@ export default function Login() {
     }
   });
   const [errores, setErrores] = useState({});
-  const [errorCred, setErrorCred] = useState(false);
+  const [accesoCerrado, setAccesoCerrado] = useState(false);
 
   const idEmail = useId();
   const idPassword = useId();
   const emailRef = useRef(null);
-  const errorRef = useRef(null);
+  const avisoRef = useRef(null);
 
-  // El error aparece al enviar; mover el foco aqui hace que se lea en voz alta
+  // El aviso aparece al enviar; mover el foco aqui hace que se lea en voz alta
   // en vez de quedarse en un rincon que el lector de pantalla no recorre.
   useEffect(() => {
-    if (errorCred) errorRef.current?.focus();
-  }, [errorCred]);
+    if (accesoCerrado) avisoRef.current?.focus();
+  }, [accesoCerrado]);
 
   function validar() {
     const fallos = {};
@@ -71,23 +66,13 @@ export default function Login() {
 
   function onSubmit(evento) {
     evento.preventDefault();
-    setErrorCred(false);
+    setAccesoCerrado(false);
 
     const fallos = validar();
     setErrores(fallos);
 
     if (Object.keys(fallos).length > 0) {
       if (fallos.email) emailRef.current?.focus();
-      return;
-    }
-
-    // Se comprueba contra la lista de correos con permiso (guardada en el panel).
-    // Si no hay nada guardado, se usa la cuenta del prototipo.
-    const permisos = leer()?.permisos;
-    const cuenta = buscarCuenta(email, permisos);
-    if (!cuenta || cuenta.contrasena !== password) {
-      setErrorCred(true);
-      emailRef.current?.focus();
       return;
     }
 
@@ -98,16 +83,15 @@ export default function Login() {
       // Recordar el correo es una comodidad, no un requisito.
     }
 
-    // El boton y el Enter hacen lo mismo: es el <form> el que decide, asi que
-    // no hay atajo por teclado que se quede sin sincronizar con el raton.
-    window.location.assign(SIGUIENTE_VISTA);
+    // Sin backend no hay sesion que abrir ni panel al que entrar.
+    setAccesoCerrado(true);
   }
 
   // En cuanto se toca un campo se va el error de ese campo: repetir el mensaje
   // mientras se escribe solo molesta.
   function limpiarError(campo) {
     setErrores((prev) => (prev[campo] ? { ...prev, [campo]: undefined } : prev));
-    setErrorCred(false);
+    setAccesoCerrado(false);
   }
 
   const volverA = import.meta.env.BASE_URL;
@@ -327,48 +311,23 @@ export default function Login() {
               </button>
             </form>
 
-            {/* Credenciales incorrectas */}
-            {errorCred && (
+            {/* Sin backend no hay sesion que abrir: se avisa y no se redirige. */}
+            {accesoCerrado && (
               <div
-                ref={errorRef}
+                ref={avisoRef}
                 tabIndex={-1}
-                role="alert"
-                className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-center outline-none dark:border-red-500/30 dark:bg-red-950/30"
+                role="status"
+                className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-center outline-none dark:border-amber-500/30 dark:bg-amber-500/10"
               >
                 <i
-                  className="fa-solid fa-circle-exclamation text-lg text-red-600 dark:text-red-400"
+                  className="fa-solid fa-lock text-lg text-amber-600 dark:text-amber-400"
                   aria-hidden="true"
                 />
-                <p className="mt-2 text-sm font-bold text-red-700 dark:text-red-300">
-                  {t("login.errorCredenciales")}
+                <p className="mt-2 text-sm font-bold text-amber-900 dark:text-amber-200">
+                  {t("login.noDisponible")}
                 </p>
               </div>
             )}
-
-            {/* Cuenta del prototipo. Se enseña porque sin ella no hay forma de
-                entrar; es el unico acceso que existe por ahora. */}
-            <div className="mt-6 rounded-xl border border-fcvt-lighter bg-fcvt-light p-4 dark:border-white/10 dark:bg-white/5">
-              <p className="text-xs font-bold uppercase tracking-wider text-fcvt-gray">
-                {t("login.cuentaPrototipo")}
-              </p>
-              <dl className="mt-2 space-y-1 text-xs text-fcvt-gray">
-                <div className="flex gap-2">
-                  <dt className="font-bold text-fcvt-dark dark:text-fcvt-dark">
-                    {t("login.correo")}
-                  </dt>
-                  <dd className="font-mono">{CUENTA_PROTOTIPO.correo}</dd>
-                </div>
-                <div className="flex gap-2">
-                  <dt className="font-bold text-fcvt-dark dark:text-fcvt-dark">
-                    {t("login.contrasena")}
-                  </dt>
-                  <dd className="font-mono">{CUENTA_PROTOTIPO.contrasena}</dd>
-                </div>
-              </dl>
-              <p className="mt-2 text-[11px] leading-relaxed text-fcvt-gray">
-                {t("login.avisoPrototipo")}
-              </p>
-            </div>
           </div>
 
           {/* Volver */}
