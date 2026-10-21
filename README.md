@@ -82,6 +82,8 @@ postgres -D <carpeta-de-datos>
 
 ## Base de datos
 
+El diseño acordado del esquema está documentado en [`docs/esquema-bd.md`](docs/esquema-bd.md).
+
 La base se crea una vez:
 
 ```bash
