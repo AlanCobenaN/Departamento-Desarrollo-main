@@ -48,13 +48,13 @@ Para revisar el panel en los dos idiomas sin navegador se puede renderizar con e
   (timeout de 4s) o no hay URL configurada. El recorte a destacados (4 ítems) ocurre en
   `api.js`, no en la API. **Tras cambiar algo en la base, ejecuta `npm run catalogo`** o el
   sitio publicado sigue sirviendo la foto vieja.
-- **El panel persiste en `localStorage`** con la clave `fcvt-panel`
+- **El panel solo se edita en desarrollo** (`import.meta.env.DEV`); el build publicado muestra
+  "Panel no disponible". En desarrollo persiste en `localStorage` con la clave `fcvt-panel`
   (`frontend/src/panel/almacen.js`): solo en ese navegador, sin cuentas ni estado compartido. El
-  botón de restablecer borra esa clave. README, `panel/datos.js` y `pages/AdminPanel.jsx` lo
-  cuentan ya igual.
-- **El login es un prototipo**: las cuentas salen de la lista de permisos del panel; la de
-  respaldo es `admin@uleam.edu.ec` / `admin123` (`CUENTA_PROTOTIPO` en `almacen.js`). Los
-  dominios permitidos están en `utils/correo.js`.
+  botón de restablecer borra esa clave.
+- **El login no está implementado**: el formulario valida formato y avisa "Acceso no disponible
+  todavía"; no compara credenciales ni redirige. No hay cuentas ni contraseñas en el cliente, y
+  el menú público ya no enlaza al acceso. Los dominios permitidos están en `utils/correo.js`.
 - **i18n**: los textos de interfaz viven en `config/branding.js` (sitio) y `config/panelTexts.js`
   (panel, extendido en el mismo diccionario) — añade cada clave nueva en **`es` y `en`**.
   El *contenido* editado en el panel es solo en español y solo se aplica cuando `lang === "es"`

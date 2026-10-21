@@ -10,7 +10,6 @@ import ProyectosEditor from "../panel/ProyectosEditor.jsx";
 import GaleriaEditor from "../panel/GaleriaEditor.jsx";
 import WhatsappEditor from "../panel/WhatsappEditor.jsx";
 import PieEditor from "../panel/PieEditor.jsx";
-import PermisosEditor from "../panel/PermisosEditor.jsx";
 import { borrar, guardar, leer } from "../panel/almacen.js";
 
 /** Las secciones del panel, en el orden en que se explican en la portada. */
@@ -21,17 +20,21 @@ const SECCIONES = [
   { id: "galeria", key: "panel.secciones.galeria", icono: "fa-solid fa-images" },
   { id: "whatsapp", key: "panel.secciones.whatsapp", icono: "fa-brands fa-whatsapp" },
   { id: "pie", key: "panel.secciones.pie", icono: "fa-solid fa-address-book" },
-  { id: "permisos", key: "panel.secciones.permisos", icono: "fa-solid fa-user-shield" },
 ];
+
+const DISPONIBLE = import.meta.env.DEV;
 
 /**
  * Panel de administración del sitio.
  *
- * PROTOTIPO. Deja cambiar todo lo que se edita aquí. Los cambios se guardan
- * solo en este navegador (localStorage, clave fcvt-panel, ver almacen.js): no
- * llegan a la base ni a otro equipo, y restablecer los borra. El aviso del
- * principio está en la propia pantalla y no en un archivo de documentación,
- * que es donde lo miraría alguien.
+ * Solo se puede editar en desarrollo (`import.meta.env.DEV`). El build
+ * publicado muestra el aviso de panel cerrado porque todavía no hay backend
+ * de autenticación.
+ *
+ * En desarrollo los cambios se guardan solo en este navegador (localStorage,
+ * clave fcvt-panel, ver almacen.js): no llegan a la base ni a otro equipo, y
+ * restablecer los borra. El aviso del principio está en la propia pantalla y
+ * no en un archivo de documentación, que es donde lo miraría alguien.
  *
  * El estado vive aquí y no en cada editor a propósito: al cambiar de sección
  * los editores se desmontan, así que si cada uno guardara lo suyo, cambiar de
@@ -40,17 +43,40 @@ const SECCIONES = [
  * Los textos de interfaz pasan por t(); el contenido que se edita aquí no.
  */
 export default function AdminPanel() {
+  return DISPONIBLE ? <PanelEditor /> : <PanelCerrado />;
+}
+
+/**
+ * Aviso del sitio publicado. No monta editores ni lee localStorage: fuera de
+ * desarrollo no hay nada que editar.
+ */
+function PanelCerrado() {
+  const { t } = useSite();
+
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-fcvt-light px-5 text-fcvt-dark dark:bg-fcvt-darker dark:text-fcvt-dark">
+      <div className="w-full max-w-md rounded-2xl border border-fcvt-lighter bg-fcvt-white p-8 text-center shadow-xl shadow-fcvt-darker/5 dark:border-white/10 dark:bg-fcvt-white">
+        <i
+          className="fa-solid fa-lock text-2xl text-fcvt-primary dark:text-fcvt-accent"
+          aria-hidden="true"
+        />
+        <h1 className="mt-4 text-2xl font-extrabold tracking-tight">
+          {t("panel.cerrado.titulo")}
+        </h1>
+        <p className="mt-2 text-sm text-fcvt-gray">{t("panel.cerrado.texto")}</p>
+      </div>
+    </div>
+  );
+}
+
+function PanelEditor() {
   const { t, lang, toggleLang, dark, toggleTheme } = useSite();
 
   const [datos, setDatos] = useState(() => {
     const base = datosIniciales();
     const guardado = leer();
     if (guardado && typeof guardado === "object") {
-      return {
-        ...base,
-        ...guardado,
-        permisos: Array.isArray(guardado.permisos) ? guardado.permisos : base.permisos,
-      };
+      return { ...base, ...guardado };
     }
     return base;
   });
@@ -218,12 +244,6 @@ export default function AdminPanel() {
               <WhatsappEditor value={datos.whatsapp} onChange={(v) => cambiar({ ...datos, whatsapp: v })} />
             )}
             {seccion === "pie" && <PieEditor value={datos.pie} onChange={(v) => cambiar({ ...datos, pie: v })} />}
-            {seccion === "permisos" && (
-              <PermisosEditor
-                valor={datos.permisos}
-                onCambiar={(v) => cambiar({ ...datos, permisos: v })}
-              />
-            )}
           </div>
 
           {/* Descartar al final también, para no tener que volver arriba */}

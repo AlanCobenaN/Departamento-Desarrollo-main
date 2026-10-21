@@ -26,6 +26,12 @@ export const panelEs = {
         "Al cambiar de equipo o borrar datos del sitio, se pierden. Sirve para previsualizar los cambios antes de publicarlos.",
     },
 
+    cerrado: {
+      titulo: "Panel no disponible",
+      texto:
+        "La edición del sitio está desactivada en la versión publicada. Se habilitará cuando exista autenticación en el servidor.",
+    },
+
     ayuda:
       "Los cambios se guardan solo en este navegador. La portada los lee automáticamente.",
 
@@ -36,7 +42,6 @@ export const panelEs = {
       galeria: "Galería",
       whatsapp: "Contacto WhatsApp",
       pie: "Pie de página",
-      permisos: "Permisos",
     },
 
     comunes: {
@@ -177,31 +182,6 @@ export const panelEs = {
       enlaceFallback: "enlace {n}",
       borrarEnlace: "Borrar el enlace {enlace}",
     },
-
-    permisos: {
-      introduccion:
-        "Da acceso a más correos institucionales para entrar al panel. El inicio de sesión solo acepta contraseñas, pero este sistema es un prototipo: se guarda en el navegador, no en la base de datos.",
-      avisoSeguridad:
-        "No es seguridad: en un navegador cualquiera puede leer esta lista y concederse permiso.",
-      lista: "Lista de correos con permiso",
-      vacio: "No hay otros correos. Solo queda la cuenta del prototipo.",
-      contrasena: "Contraseña: {valor}",
-      quitar: "Quitar permiso",
-      anadirTitulo: "Añadir un correo institucional",
-      correo: "Correo institucional",
-      clave: "Contraseña para este acceso",
-      clavePlaceholder: "Mínimo 8 caracteres",
-      dar: "Dar permiso",
-      advertencia: "Advertencia",
-      avisoPrefijo: "Estos datos se guardan en",
-      avisoResaltado: "localStorage",
-      avisoSufijo:
-        " del navegador. Si borras los datos del sitio, se pierden. No uses contraseñas reales que uses en otros sitios.",
-      errorVacio: "Rellena el correo y la contraseña.",
-      errorDominio: "Solo se admiten correos de @uleam.edu.ec o @live.uleam.edu.ec.",
-      errorContrasena: "La contraseña debe tener al menos 8 caracteres.",
-      errorDuplicado: "Ese correo ya está en la lista de permisos.",
-    },
   },
 };
 
@@ -226,6 +206,12 @@ export const panelEn = {
         "They are lost when you switch device or clear the site data. Use it to preview changes before publishing.",
     },
 
+    cerrado: {
+      titulo: "Panel not available",
+      texto:
+        "Site editing is disabled in the published version. It will be enabled once server authentication exists.",
+    },
+
     ayuda:
       "Changes are saved only in this browser. The homepage reads them automatically.",
 
@@ -236,7 +222,6 @@ export const panelEn = {
       galeria: "Gallery",
       whatsapp: "WhatsApp contact",
       pie: "Footer",
-      permisos: "Permissions",
     },
 
     comunes: {
@@ -376,31 +361,6 @@ export const panelEn = {
       destinoDe: 'Target for "{enlace}"',
       enlaceFallback: "link {n}",
       borrarEnlace: "Delete link {enlace}",
-    },
-
-    permisos: {
-      introduccion:
-        "Gives more institutional emails access to the panel. Sign-in only accepts passwords, but this system is a prototype: it is saved in the browser, not in the database.",
-      avisoSeguridad:
-        "This is not security: in a browser anyone can read this list and grant themselves access.",
-      lista: "List of emails with access",
-      vacio: "No other emails. Only the prototype account remains.",
-      contrasena: "Password: {valor}",
-      quitar: "Remove access",
-      anadirTitulo: "Add an institutional email",
-      correo: "Institutional email",
-      clave: "Password for this access",
-      clavePlaceholder: "At least 8 characters",
-      dar: "Grant access",
-      advertencia: "Warning",
-      avisoPrefijo: "This data is saved in your browser's",
-      avisoResaltado: "localStorage",
-      avisoSufijo:
-        ". If you clear the site data, it is lost. Do not use real passwords you use elsewhere.",
-      errorVacio: "Fill in the email and the password.",
-      errorDominio: "Only @uleam.edu.ec or @live.uleam.edu.ec emails are accepted.",
-      errorContrasena: "The password must be at least 8 characters.",
-      errorDuplicado: "That email is already on the access list.",
     },
   },
 };

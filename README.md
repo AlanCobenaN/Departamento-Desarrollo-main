@@ -33,16 +33,17 @@ textos, nombre del sitio y número de WhatsApp.
 de build, porque en GitHub Pages una carpeta es una ruta de verdad y una ruta
 de router daría 404 al recargarla.
 
-Ahora mismo el acceso es un **prototipo**: solo pasa la cuenta
-`admin@uleam.edu.ec` / `admin123`, que sale de la lista de permisos del
-propio panel (`CUENTA_PROTOTIPO` en `frontend/src/panel/almacen.js`). No es
-seguridad, es una puerta abierta para poder probar el panel sin montar
-autenticación.
+El acceso todavía no está implementado: el formulario de `/login/` valida el
+correo y la contraseña en el navegador, pero al enviarlo solo avisa de que el
+acceso no está disponible; no compara credenciales, no abre sesión y no
+redirige al panel. No hay cuentas ni contraseñas guardadas en el cliente, y el
+menú público ya no enlaza al acceso.
 
-El panel deja cambiar servicios, tecnologías, proyectos, galería, contacto de
-WhatsApp y pie de página. Los cambios se guardan **solo en ese navegador**
-(`localStorage`, clave `fcvt-panel`): no llegan a la base ni a otro equipo, y
-el botón de restablecer los borra. Los datos de partida están en
+El panel de administración solo permite editar en desarrollo (`npm run
+inicio`). En la versión publicada muestra el aviso "Panel no disponible". En
+desarrollo los cambios se guardan **solo en ese navegador** (`localStorage`,
+clave `fcvt-panel`): no llegan a la base ni a otro equipo, y el botón de
+restablecer los borra. Los datos de partida están en
 `frontend/src/panel/datos.js`.
 
 La interfaz del panel tiene botón ES/EN; los contenidos que editas quedan en
