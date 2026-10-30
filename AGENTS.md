@@ -12,7 +12,7 @@ npm run inicio                                # dev: API (:8000) + Vite (:5173),
 npm run build                                 # solo compila; sale en frontend/dist
 npm run preview                               # sirve la compilación en local
 npm run catalogo                              # reescribe frontend/public/catalogo.json desde Postgres
-php api/database/migrate.php --seed           # esquema + datos de ejemplo; --seed TRUNCATEa `proyectos`
+php api/database/migrate.php --seed           # migraciones pendientes + seed; --seed TRUNCATEa `proyectos`
 npm run dev --workspace frontend              # solo frontend (Vite usa entonces el puerto 5173)
 npm run dev:api                               # solo la API (puerto 8000 fijo)
 ```
@@ -22,6 +22,19 @@ npm run dev:api                               # solo la API (puerto 8000 fijo)
   `api/.env` / `frontend/.env` que falten copiando los `.env.example`. La base se crea una vez:
   `createdb fcvt`.
 - Puertos: API `API_PORT` en `api/.env` (8000), web variable de entorno `FRONT_PORT` (5173).
+
+## Base de datos
+
+- Las migraciones viven en `api/database/migrations/NNN_nombre.sql`; `schema.sql` ya no existe.
+  `php api/database/migrate.php` las aplica en orden, una sola vez, y las registra en
+  `schema_migrations`. Cada archivo va dentro de una transacción: **no incluyas `BEGIN` ni
+  `COMMIT`**.
+- Para añadir un cambio, crea el archivo con el número siguiente y ejecuta el runner. No edites
+  migraciones ya aplicadas.
+- `--seed` aplica primero las pendientes y después `seed.sql`, que **TRUNCATEa `proyectos`**.
+  No crea usuarios.
+- `003_permisos.sql` concede permisos al rol de la API solo si ya existe (por defecto
+  `fcvt_app`, configurable con `DB_APP_ROLE`). No crea el rol ni guarda contraseñas.
 
 ## Verificación
 

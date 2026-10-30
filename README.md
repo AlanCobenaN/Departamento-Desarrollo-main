@@ -21,7 +21,7 @@ frontend/               el sitio
 api/                    la API en PHP
   public/index.php      punto de entrada y rutas
   src/                  Controllers, Services, Repositories
-  database/             schema.sql, seed.sql, migrate.php, export.php
+  database/             migrations/, seed.sql, migrate.php, export.php
 ```
 
 Casi todo lo que se toca a menudo está en `frontend/src/config/branding.js`:
@@ -90,14 +90,30 @@ La base se crea una vez:
 createdb fcvt
 ```
 
-Y el esquema con los datos de ejemplo, cada vez que haga falta:
+Y las migraciones pendientes con los datos de ejemplo, cada vez que haga falta:
 
 ```bash
 php api/database/migrate.php --seed
 ```
 
-Sin `--seed` solo aplica el esquema. **El seed borra la tabla `proyectos`
-antes de insertar**, así que no lo ejecutes en producción.
+`migrate.php` aplica en orden los archivos de
+`api/database/migrations/NNN_nombre.sql`, registra cada uno en la tabla
+`schema_migrations` y no repite los ya aplicados. Cada migración corre dentro
+de una transacción: si una falla, se revierte y se detiene todo con el nombre
+del archivo y el error. Los archivos de migración **no llevan `BEGIN` ni
+`COMMIT`**; el runner los envuelve.
+
+Sin `--seed` solo aplica migraciones pendientes. Con `--seed`, después carga
+`api/database/seed.sql`. **El seed borra la tabla `proyectos` antes de
+insertar**, así que no lo ejecutes en producción.
+
+Para añadir un cambio de esquema, crea el siguiente archivo con el número
+siguiente (por ejemplo `004_mi_cambio.sql`) y ejecuta `migrate.php`. No edites
+una migración que ya esté aplicada en alguna base.
+
+La migración `003_permisos.sql` concede permisos mínimos al rol de base de
+datos de la API si ese rol ya existe; no lo crea ni guarda su contraseña. Por
+defecto usa `fcvt_app` y se puede cambiar con `DB_APP_ROLE` en `api/.env`.
 
 Va por PDO y lee el mismo `api/.env` que la API, así que carga exactamente lo
 que leerá el sitio.

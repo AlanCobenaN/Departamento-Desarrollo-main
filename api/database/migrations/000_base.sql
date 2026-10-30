@@ -1,10 +1,12 @@
--- Esquema de la base de datos del equipo de desarrollo FCVT.
+-- Migracion base: estructura que antes vivia en schema.sql.
 -- PostgreSQL 14 o superior.
 --
--- Este archivo define la estructura. Los datos iniciales estan en seed.sql.
--- Es idempotente: se puede volver a ejecutar sin romper nada.
-
-BEGIN;
+-- Es idempotente: se puede aplicar sobre una base creada con el schema.sql
+-- antiguo sin perder filas. Las migraciones posteriores amplian este esquema.
+--
+-- No incluyas BEGIN/COMMIT en los archivos de migracion: migrate.php envuelve
+-- cada uno en su propia transaccion y registra el resultado en
+-- schema_migrations.
 
 -- ---------------------------------------------------------------------------
 -- proyectos
@@ -16,8 +18,8 @@ BEGIN;
 --   categoria es TEXT y no una tabla aparte. El frontend agrupa y filtra por
 --   ese valor tal cual llega en el JSON, asi que normalizarlo a una FK
 --   obligaria a hacer JOIN en cada lectura para volver a devolver un string.
---   Si algun dia las categorias necesitan descripcion o color propio, ahi si
---   conviene una tabla.
+--   La migracion 002 la convierte en clave foranea hacia categorias(nombre)
+--   para que el panel solo acepte valores de referencia.
 --
 --   tecnologias es TEXT[] y no una tabla puente. El frontend solo las pinta
 --   como lista de chips, nunca las filtra ni las ordena en el servidor. Una
@@ -107,5 +109,3 @@ INSERT INTO categorias (nombre) VALUES
     ('Aplicaciones Móviles'),
     ('Investigación')
 ON CONFLICT (nombre) DO NOTHING;
-
-COMMIT;
